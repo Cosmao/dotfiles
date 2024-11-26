@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Very good wallpaper handler for sure
+#
 
 getCurrentWallpaper(){
   CURRENTPAPERS=$(hyprctl hyprpaper listactive)
