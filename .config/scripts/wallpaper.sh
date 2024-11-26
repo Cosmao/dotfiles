@@ -28,6 +28,8 @@ setWallpaper(){
   PYWAL=$(wal -i $1 -n -t -e)
   UNLOAD=$(hyprctl hyprpaper unload unused)
   echo $(wal -i $1 --preview)
+  sed -i "s|^preload.*|preload = ${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
+  sed -i "s|^wallpaper.*|wallpaper = ,${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
 }
 
 DIR=$HOME/Wallpapers
