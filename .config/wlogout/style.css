@@ -1,23 +1,24 @@
+/* pywal colors */ 
+@import '~/.cache/wal/colors-wlogout.css';
+
 * {
 	background-image: none;
 	box-shadow: none;
 }
 
 window {
-	background-color: rgba(12, 12, 12, 0.9);
+	background-color: @background;
 }
 
 button {
-    border-radius: 0;
-    border-color: black;
-	text-decoration-color: #FFFFFF;
     color: #FFFFFF;
-	background-color: #1E1E1E;
-	border-style: solid;
-	border-width: 1px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: 25%;
+    background-color: @color1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20%;
+    border: none;
+	  border-radius: 10px;
+	  outline-style: none;
 }
 
 button:focus, button:active, button:hover {
@@ -27,24 +28,42 @@ button:focus, button:active, button:hover {
 
 #lock {
     background-image: image(url("/usr/share/wlogout/icons/lock.png"), url("/usr/local/share/wlogout/icons/lock.png"));
+    background-color: @color1;
+    border-radius: 5px 0px 0px 0px;
+    margin : 100px 0px 0px 550px;
 }
 
 #logout {
     background-image: image(url("/usr/share/wlogout/icons/logout.png"), url("/usr/local/share/wlogout/icons/logout.png"));
+    background-color: @color2;
+    border-radius: 5px 0px 0px 0px;
+    margin : 100px 0px 0px 550px;
 }
 
 #suspend {
     background-image: image(url("/usr/share/wlogout/icons/suspend.png"), url("/usr/local/share/wlogout/icons/suspend.png"));
+    background-color: @color3;
+    border-radius: 5px 0px 0px 0px;
+    margin : 100px 0px 0px 550px;
 }
 
 #hibernate {
     background-image: image(url("/usr/share/wlogout/icons/hibernate.png"), url("/usr/local/share/wlogout/icons/hibernate.png"));
+    background-color: @color4;
+    border-radius: 5px 0px 0px 0px;
+    margin : 100px 0px 0px 550px;
 }
 
 #shutdown {
     background-image: image(url("/usr/share/wlogout/icons/shutdown.png"), url("/usr/local/share/wlogout/icons/shutdown.png"));
+    background-color: @color5;
+    border-radius: 5px 0px 0px 0px;
+    margin : 100px 0px 0px 550px;
 }
 
 #reboot {
     background-image: image(url("/usr/share/wlogout/icons/reboot.png"), url("/usr/local/share/wlogout/icons/reboot.png"));
+    background-color: @color6;
+    border-radius: 5px 0px 0px 0px;
+    margin : 100px 0px 0px 550px;
 }
