@@ -24,12 +24,27 @@ setWallpaper(){
     exit 1
   fi
 
+  # Set the wallpaper and run pywal
   SETPAPER=$(hyprctl hyprpaper wallpaper ",$1")
   PYWAL=$(wal -i $1 -n -t -e)
   UNLOAD=$(hyprctl hyprpaper unload unused)
   echo $(wal -i $1 --preview)
+
+  # Update hyprpaper file
   sed -i "s|^preload.*|preload = ${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
   sed -i "s|^wallpaper.*|wallpaper = ,${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
+
+  # Get colours to waybar
+  cp ~/.cache/wal/colors-waybar.css ~/dotfiles/.config/waybar/ >/dev/null 2>&1
+
+  # terminate running instances
+  killall -q waybar >/dev/null 2>&1
+
+  # wait until processes have been shut down
+  while pgrep -x waybar >/dev/null; do sleep 0.1; done
+
+  # Relaunch waybar
+  hyprctl dispatch exec waybar >/dev/null 2>&1
 }
 
 DIR=$HOME/Wallpapers
