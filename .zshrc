@@ -4,12 +4,6 @@
 #  _ / /\__ \ | | | | | (__ 
 # (_)___|___/_| |_|_|  \___|
 #                           
-# -----------------------------------------------------
-# ML4W zshrc loader
-# -----------------------------------------------------
-
-# DON'T CHANGE THIS FILE
-
 # You can define your custom configuration by adding
 # files in ~/.config/zshrc 
 # or by creating a folder ~/.config/zshrc/custom
