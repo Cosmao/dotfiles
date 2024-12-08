@@ -16,3 +16,4 @@ alias vim='$EDITOR'
 alias wifi='nmtui'
 alias wallpaper="~/.config/scripts/wallpaper.sh"
 alias pacmanbak="~/.config/scripts/pacmanback.sh"
+alias cat="bat"
