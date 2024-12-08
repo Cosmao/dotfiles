@@ -4,5 +4,5 @@
  - nvim snacks
  - nvim pywal?
  - screenshot flag handling
- - firefox pywal
+ - firefox pywal?
 
