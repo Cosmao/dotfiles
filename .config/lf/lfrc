@@ -6,10 +6,28 @@ $mkdir -p ~/.trash
 # cmds
 cmd trash $IFS="$(printf '\n\t')"; mv $fx ~/.trash
 
+cmd mkdir ${{
+  printf "Directory Name: "
+  read ans
+  mkdir $ans
+ }}
+
+cmd mkfile ${{
+  printf "File Name: "
+  read ans
+  $EDITOR $ans
+ }}
+
 # File Openers
 map e $$EDITOR "$f"
 map E $sudoedit "$f"
 
+# Remove bind
+map m
+
 # binds
 map . set hidden!
 map D trash
+map mf mkfile
+map md mkdir
+
