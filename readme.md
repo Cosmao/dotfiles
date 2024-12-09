@@ -3,7 +3,7 @@
  - Fixa bakgrund med pywal
  - Fixa iconer för bilder
 
-### Screenshot.sh
+### Wallpaper.sh
  - Flaggor för input
  - Img preview?
  - fzf för bilder med alternatv på den man väljer
