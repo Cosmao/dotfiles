@@ -1,3 +1,15 @@
 set cleaner ~/.config/lf/lf_kitty_clean
 set previewer ~/.config/lf/lf_kitty_preview
+
+$mkdir -p ~/.trash
+
+# cmds
+cmd trash $IFS="$(printf '\n\t')"; mv $fx ~/.trash
+
+# File Openers
+map e $$EDITOR "$f"
+map E $sudoedit "$f"
+
+# binds
 map . set hidden!
+map D trash
