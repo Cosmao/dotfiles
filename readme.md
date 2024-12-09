@@ -5,4 +5,5 @@
  - nvim pywal?
  - screenshot flag handling
  - firefox pywal?
+ - Bättre zsh
 
