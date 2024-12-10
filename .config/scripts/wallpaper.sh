@@ -19,6 +19,9 @@ SHOWCOLOUR="true"
 
 
 getCurrentWallpaper(){
+  if [ "$VERBOSE" == "true" ]; then
+    echo "Checking if already in use."
+  fi
   CURRENTPAPERS=$(hyprctl hyprpaper listactive)
   CURRENTPAPERPATH=$(echo $CURRENTPAPERS | sed 's/.* = \(.*\) = .*/\1/')
   if [ "$CURRENTPAPERPATH" == "$1" ]; then
@@ -28,60 +31,40 @@ getCurrentWallpaper(){
 }
 
 setHyprpaper(){
-
-}
-
-setWallpaper(){
   if [ "$VERBOSE" == "true" ]; then
-    echo "Checking if already in use."
-  fi
-  getCurrentWallpaper $1
-  ALREADYUSED=$?
-  if [[ $ALREADYUSED -eq 1 ]]; then
-    echo "Already using that wallpaper."
-    exit
-  fi
-
-  if [ "$VERBOSE" == "true" ]; then
+    echo "Starting hyprpaper."
     echo "Preloading wallpaper."
   fi
+
   PRELOAD=$(hyprctl hyprpaper preload $1)
   if [ ! "$PRELOAD" == "ok" ]; then
     echo "Failed to preload."
     if [ "$VERBOSE" == "true" ]; then
       echo $PRELOAD
     fi
-    exit 1
+    return 1
   fi
 
-  # Set the wallpaper and run pywal
   if [ "$VERBOSE" == "true" ]; then
     echo "Setting wallpaper."
   fi
   SETPAPER=$(hyprctl hyprpaper wallpaper ",$1")
 
   if [ "$VERBOSE" == "true" ]; then
-    echo "Generating colours."
-  fi
-  PYWAL=$(wal -i $1 -n -t -e)
-
-  if [ "$VERBOSE" == "true" ]; then
     echo "Unloading old wallpaper."
   fi
   UNLOAD=$(hyprctl hyprpaper unload unused)
 
-  if [ "$SHOWCOLOUR" == "true" ]; then
-    echo $(wal -i $1 --preview)
-  fi
-
-  # Update hyprpaper file
-  #
   if [ "$VERBOSE" == "true" ]; then
     echo "Writing to hyprpaper.conf"
   fi
   sed -i "s|^preload.*|preload = ${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
   sed -i "s|^wallpaper.*|wallpaper = ,${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
 
+  return 0
+}
+
+setWaybar(){
   # Get colours to waybar
   if [ "$VERBOSE" == "true" ]; then
     echo "Setting waybar colours."
@@ -103,6 +86,33 @@ setWallpaper(){
     echo "Starting waybar."
   fi
   hyprctl dispatch exec waybar >/dev/null 2>&1
+  return 0
+}
+
+setWallpaper(){
+  getCurrentWallpaper $1
+  ALREADYUSED=$?
+  if [[ $ALREADYUSED -eq 1 ]]; then
+    echo "Already using that wallpaper."
+    exit
+  fi
+
+  if [ "$VERBOSE" == "true" ]; then
+    echo "Generating colours."
+  fi
+  PYWAL=$(wal -i $1 -n -t -e)
+  if [ "$SHOWCOLOUR" == "true" ]; then
+    echo $(wal -i $1 --preview)
+  fi
+
+  setHyprpaper $1 &
+  HYPRRESULT=$?
+  setWaybar &
+  wait
+
+  if [ $HYPRRESULT -eq 1 ]; then
+    echo "Shit went wrong yo."
+  fi
 
   if [ "$VERBOSE" == "true" ]; then
     echo "Done."
