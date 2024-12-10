@@ -4,10 +4,10 @@
 #
 ##TODO: 
 # Fix fuzzy
-# Fix random
-# Fix preview
 
+# -----------------------------------------------------
 # Variables
+# -----------------------------------------------------
 DIR=$WALLPAPERPATH
 USERANDOM="false"
 PREVIEW="false"
@@ -17,7 +17,9 @@ ABSOLUTE="false"
 FUZZY="false"
 SHOWCOLOUR="true"
 
-
+# -----------------------------------------------------
+# Functions
+# -----------------------------------------------------
 getCurrentWallpaper(){
   if [ "$VERBOSE" == "true" ]; then
     echo "Checking if already in use."
@@ -119,6 +121,43 @@ setWallpaper(){
   fi
 }
 
+previewWallpaper(){
+  getCurrentWallpaper $1
+  ALREADYUSED=$?
+  if [[ $ALREADYUSED -eq 1 ]]; then
+    echo "Already using that wallpaper."
+    exit
+  fi
+  
+  kitty +icat $1
+
+  read -p "Use this wallpaper? (y/n) " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    return 1
+  fi
+  return 0
+}
+
+getRandomPicture(){
+  # Make an array of all the supported files in directory
+  PICS=($(find $DIR -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.jxl" -o -iname "*.webp" \)))
+
+  # Doublecheck that its not 0
+  if (( ${#PICS[@]} == 0)); then
+    echo "No supported files found in directory."
+    exit 1
+  fi
+
+  while : ; do
+    RANDOMPICS=${PICS[ $RANDOM % ${#PICS[@]} ]}
+    getCurrentWallpaper $RANDOMPICS
+    ALREADYUSED=$?
+    [[ $ALREADYUSED -eq 1 ]] || break
+  done
+  FILE=$RANDOMPICS
+}
+
 usage(){
    # Display Help
    echo "Add description of the script functions here."
@@ -136,7 +175,9 @@ usage(){
    echo
 }
 
-# Handle all arguments
+# -----------------------------------------------------
+# Entrypoint
+# -----------------------------------------------------
 while getopts "rpvsf:F:d:h" flag ; do
   case "${flag}" in
     r) USERANDOM="true" ;;
@@ -174,33 +215,37 @@ fi
 # Got absolute path to a image
 if [ "$ABSOLUTE" == "true" ]; then
   if [ -f $DIR/$FILE ]; then
-    setWallpaper $DIR/$FILE
+    if [ "$PREVIEW" == "true" ]; then
+      previewWallpaper $DIR$FILE
+      RESPONSE=$?
+
+      if [[ $RESPONSE -eq 1 ]]; then
+        setWallpaper $DIR$FILE
+      fi
+      exit 0
+    else
+      setWallpaper $DIR$FILE
+    fi
     exit 0
   else
-    echo "File $DIR/$FILE doesn't exist."
+    echo "File $DIR$FILE doesn't exist."
     exit 1
   fi
 fi
 
+if [ "$USERANDOM" == "true" ]; then
+  if [ "$PREVIEW" == "false" ]; then
+    getRandomPicture
+    setWallpaper $FILE
+    exit 0
+  elif [ "$PREVIEW" == "true" ]; then 
+    getRandomPicture
+    previewWallpaper $FILE
+    RESPONSE=$?
 
-
-# We send a picture to use
-if [ ! -z $1 ]; then
-  if [ ! -f $DIR/$1 ]; then
-   echo "File doesnt exist"
-   exit 1
-  else
-   setWallpaper $DIR/$1
+    if [[ $RESPONSE -eq 1 ]]; then
+      setWallpaper $FILE
+    fi
+    exit 0
   fi
-
-# Randomize
-else
-  PICS=($(find $DIR -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.jxl" -o -iname "*.webp" \)))
-  while : ; do
-    RANDOMPICS=${PICS[ $RANDOM % ${#PICS[@]} ]}
-    getCurrentWallpaper $RANDOMPICS
-    ALREADYUSED=$?
-    [[ $ALREADYUSED -eq 1 ]] || break
-  done
-  setWallpaper $RANDOMPICS
 fi
