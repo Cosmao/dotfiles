@@ -3,6 +3,15 @@
 # Very good wallpaper handler for sure
 #
 
+# Variables
+DIR=$HOME/Wallpapers # TODO: Change to export
+USERANDOM="false"
+PREVIEW="false"
+FILE=""
+VERBOSE="false"
+FUZZY="false"
+
+
 getCurrentWallpaper(){
   CURRENTPAPERS=$(hyprctl hyprpaper listactive)
   CURRENTPAPERPATH=$(echo $CURRENTPAPERS | sed 's/.* = \(.*\) = .*/\1/')
@@ -50,10 +59,45 @@ setWallpaper(){
   hyprctl dispatch exec waybar >/dev/null 2>&1
 }
 
-DIR=$HOME/Wallpapers
+usage(){
+   # Display Help
+   echo "Add description of the script functions here."
+   echo
+   echo "Syntax: scriptTemplate [-r|p|f|F|v|d|h]"
+   echo "options:"
+   echo "r     Selects a random wallpaper in your wallpaper directory."
+   echo "p     Shows a preview of your selected wallpaper before you change."
+   echo "f     Filename of the file you wish to use as a wallpaper."
+   echo "F     Fuzzy find a file inside the wallpaper directory."
+   echo "v     Verbose mode."
+   echo "d     Directory you wish to get your wallpaper from if not set as an export."
+   echo "h     Print this Help."
+   echo
+}
+
+while getopts ":r :p :f: :F: :v :d: :h" flag; do
+  case "${flag}" in
+    r) USERANDOM="true" ;;
+    p) PREVIEW="true" ;;
+    f) FILE=${OPTARG} ;;
+    F) FILE=${OPTARG} FUZZY="true" ;;
+    v) VERBOSE="true" ;;
+    d) DIR=${OPTARG} ;;
+    h) usage exit 0 ;;
+    ?) echo "Error: Invalid option was specified -$OPTARG"; exit 1 ;;
+  esac
+done
 
 if [ ! -d $DIR ]; then
   echo "Wallpaper directory not found"
+  exit 1
+fi
+
+if [ ! -z $FILE ] && [ "$USERANDOM" == "true" ]; then
+  usage
+  if [ "$VERBOSE" == "true" ]; then
+    echo "Cant send random and a specific file!"
+  fi
   exit 1
 fi
 
