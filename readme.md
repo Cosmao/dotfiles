@@ -4,8 +4,6 @@
  - Fixa iconer för bilder
 
 ### Wallpaper.sh
- - Flaggor för input
- - Img preview?
  - fzf för bilder med alternatv på den man väljer
 
 ### Nvim
