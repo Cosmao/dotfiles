@@ -2,6 +2,10 @@
 #
 # Very good wallpaper handler for sure
 #
+##TODO: 
+# Fix fuzzy
+# Fix random
+# Fix preview
 
 # Variables
 DIR=$WALLPAPERPATH
@@ -21,6 +25,10 @@ getCurrentWallpaper(){
     return 1
   fi
   return 0
+}
+
+setHyprpaper(){
+
 }
 
 setWallpaper(){
@@ -153,6 +161,7 @@ elif ((WALLPAPEROPTS == 0)); then
   exit 1
 fi
 
+# Got absolute path to a image
 if [ "$ABSOLUTE" == "true" ]; then
   if [ -f $DIR/$FILE ]; then
     setWallpaper $DIR/$FILE
@@ -162,6 +171,8 @@ if [ "$ABSOLUTE" == "true" ]; then
     exit 1
   fi
 fi
+
+
 
 # We send a picture to use
 if [ ! -z $1 ]; then
