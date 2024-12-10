@@ -1,8 +1,10 @@
 #!/bin/bash
-#
-# Very good wallpaper handler for sure
-#
-##TODO: 
+# -----------------------------------------------------
+# A wallpaper manager thats probably a bit 
+# overengineered for what I use it for
+# -----------------------------------------------------
+
+#TODO: 
 # Fix fuzzy
 
 # -----------------------------------------------------
