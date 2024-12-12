@@ -8,7 +8,9 @@ map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
 --LazyGit
-map("n", "<leader>gl", "<cmd> LazyGit <cr>", { desc = "Lazygit" })
+map("n", "<leader>gl", function()
+  Snacks.lazygit()
+end, { desc = "Lazygit" })
 
 --TodoTelescope
 map("n", "<leader>ft", "<cmd> TodoTelescope <cr>", { desc = "TodoTelescope" })
