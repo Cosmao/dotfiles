@@ -18,10 +18,12 @@ map("n", "<leader>fq", "<cmd> TodoQuickFix <cr>", { desc = "TodoQuickFix" })
 
 --Overseer
 -- map("n", "<leader>oo", "<cmd> OverseerToggle left<cr>", { desc = "Toggle Overseer" })
-map("n", "<leader><S-o>", "<cmd> OverseerToggle left<cr>", { desc = "Toggle Overseer" })
+map("n", "<leader><S-o>", "<cmd> OverseerToggle right<cr>", { desc = "Toggle Overseer" })
 map("n", "<leader>or", "<cmd> OverseerRun <cr>", { desc = "Overseer Run" })
 
---notify
--- map("n", "<leader>fn", "<cmd> Telescope notify <cr>", { desc = "Telescope Notify" })
+--notify history
+map("n", "<leader>fn", function()
+  Snacks.notifier.show_history()
+end, { desc = "Telescope Notify" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
