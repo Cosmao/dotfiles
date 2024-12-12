@@ -22,6 +22,6 @@ map("n", "<leader><S-o>", "<cmd> OverseerToggle left<cr>", { desc = "Toggle Over
 map("n", "<leader>or", "<cmd> OverseerRun <cr>", { desc = "Overseer Run" })
 
 --notify
-map("n", "<leader>fn", "<cmd> Telescope notify <cr>", { desc = "Telescope Notify" })
+-- map("n", "<leader>fn", "<cmd> Telescope notify <cr>", { desc = "Telescope Notify" })
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
