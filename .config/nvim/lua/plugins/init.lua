@@ -1,11 +1,10 @@
 return {
   {
     "stevearc/conform.nvim",
-    event = "BufWritePre", -- uncomment for format on save
+    event = "BufWritePre",
     opts = require "configs.conform",
   },
 
-  -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -16,12 +15,6 @@ return {
   {
     "kdheepak/lazygit.nvim",
     cmd = { "LazyGit" },
-    --    lazy = false,
-    --[[    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
-    }, ]]
-    --
     config = function()
       require("telescope").load_extension "lazygit"
     end,
@@ -47,7 +40,6 @@ return {
   {
     -- TODO: See if I can make it lazy load somehow, seems iffy
     "folke/todo-comments.nvim",
-    --   dependencies = { "nvim-lua/plenary.nvim" },
     lazy = false,
     opts = {},
   },
@@ -66,11 +58,6 @@ return {
 
   {
     "stevearc/overseer.nvim",
-    --[[dependencies = {
-      "rcarriga/nvim-notify",
-      "stevearc/dressing.nvim",
-    },]]
-    --
     config = function()
       require("overseer").setup {
         templates = {
@@ -80,7 +67,6 @@ return {
         },
       }
     end,
-    --lazy = false,
     cmd = { "OverseerToggle", "OverseerRun" },
   },
 
@@ -95,10 +81,6 @@ return {
   {
     "MeanderingProgrammer/render-markdown.nvim",
     opts = {},
-    --dependencies = { "nvim-treesitter/nvim-treesitter" },
-    -- dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
     config = function()
       require("render-markdown").setup {}
     end,
