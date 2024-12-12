@@ -1,10 +1,6 @@
 # -----------------------------------------------------
 # ALIASES
 # -----------------------------------------------------
-
-# -----------------------------------------------------
-# General
-# -----------------------------------------------------
 alias c='clear'
 alias ls='eza -a --icons=always'
 alias ll='eza -al --icons=always'
@@ -16,4 +12,5 @@ alias vim='$EDITOR'
 alias wifi='nmtui'
 alias wallpaper="~/.config/scripts/wallpaper.sh"
 alias pacmanbak="~/.config/scripts/pacmanback.sh"
+alias mkrepo="~/.config/scripts/repo.sh"
 alias cat="bat"
