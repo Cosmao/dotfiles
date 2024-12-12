@@ -19,6 +19,14 @@ ABSOLUTE="false"
 FUZZY="false"
 SHOWCOLOUR="true"
 
+
+# -----------------------------------------------------
+# Program checks
+# -----------------------------------------------------
+command -v hyprctl >/dev/null 2>&1 || { echo >&2 "Requires hyprland to be installed, aborting."; exit 1;}
+command -v waybar >/dev/null 2>&1 || { echo >&2 "Requires waybar to be installed, aborting."; exit 1;}
+command -v wal >/dev/null 2>&1 || { echo >&2 "Requires pywal16 to be installed, aborting."; exit 1;}
+
 # -----------------------------------------------------
 # Functions
 # -----------------------------------------------------
@@ -197,6 +205,12 @@ done
 # Make sure directory exists
 if [ ! -d $DIR ]; then
   echo "Wallpaper directory not found"
+  exit 1
+fi
+
+
+if [ "$TERM" != "xterm-kitty" ] && [ "$PREVIEW" == "true" ]; then
+  echo "Has to run inside kitty for preview to work, aborting."
   exit 1
 fi
 
