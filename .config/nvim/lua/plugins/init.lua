@@ -85,14 +85,6 @@ return {
   },
 
   {
-    "stevearc/dressing.nvim",
-    opts = {},
-    config = function()
-      require("dressing").setup {}
-    end,
-  },
-
-  {
     "MeanderingProgrammer/render-markdown.nvim",
     opts = {},
     config = function()
