@@ -29,8 +29,5 @@ Backup of my dotfiles that use the following programs:
 ### Firefox
  - Testa firefox pywal
 
-### SDDM
- - Fixa till SDDM så det inte bara är en svart skärm
-
 ### dunst
  - dunst pywal
