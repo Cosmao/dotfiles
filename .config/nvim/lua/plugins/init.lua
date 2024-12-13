@@ -38,7 +38,7 @@ return {
       },
       indent = { enabled = true },
       input = { enabled = true },
-      notifier = { enabled = true },
+      notifier = { enabled = true, style = "compact", timeout = 5000 },
       quickfile = { enabled = true },
       scroll = { enabled = true },
       statuscolumn = { enabled = true },
