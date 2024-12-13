@@ -18,6 +18,8 @@ VERBOSE="false"
 ABSOLUTE="false"
 FUZZY="false"
 SHOWCOLOUR="true"
+BLURRED="current_blurred.png"
+BLURR="50x30"
 
 
 # -----------------------------------------------------
@@ -26,6 +28,7 @@ SHOWCOLOUR="true"
 command -v hyprctl >/dev/null 2>&1 || { echo >&2 "Requires hyprland to be installed, aborting."; exit 1;}
 command -v waybar >/dev/null 2>&1 || { echo >&2 "Requires waybar to be installed, aborting."; exit 1;}
 command -v wal >/dev/null 2>&1 || { echo >&2 "Requires pywal16 to be installed, aborting."; exit 1;}
+command -v magick >/dev/null 2>&1 || { echo >&2 "Requires magick to be installed, aborting."; exit 1;}
 
 # -----------------------------------------------------
 # Functions
@@ -126,6 +129,9 @@ setWallpaper(){
     echo "Shit went wrong yo."
   fi
 
+  generateBlurred $1 &
+  echo "Generating blurred async"
+
   if [ "$VERBOSE" == "true" ]; then
     echo "Done."
   fi
@@ -166,6 +172,10 @@ getRandomPicture(){
     [[ $ALREADYUSED -eq 1 ]] || break
   done
   FILE=$RANDOMPICS
+}
+
+generateBlurred(){
+  magick $1 -blur "$BLURR" "$DIR/$BLURRED"
 }
 
 usage(){
