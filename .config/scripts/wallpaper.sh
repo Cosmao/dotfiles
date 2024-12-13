@@ -157,7 +157,7 @@ previewWallpaper(){
 
 getRandomPicture(){
   # Make an array of all the supported files in directory
-  PICS=($(find $DIR -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.jxl" -o -iname "*.webp" \)))
+  PICS=($(find "$DIR" -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.jxl" -o -iname "*.webp" \) ! -name "current_blurred.png"))
 
   # Doublecheck that its not 0
   if (( ${#PICS[@]} == 0)); then
