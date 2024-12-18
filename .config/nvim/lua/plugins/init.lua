@@ -37,7 +37,7 @@ return {
         },
       },
       indent = { enabled = true },
-      input = { enabled = true },
+      input = { enabled = true, noautocmd = true, b = { completion = false } },
       notifier = { enabled = true, style = "compact", timeout = 5000 },
       quickfile = { enabled = true },
       scroll = { enabled = true },
@@ -97,7 +97,9 @@ return {
     event = "LspAttach",
     priority = 1000,
     config = function()
-      require("tiny-inline-diagnostic").setup {}
+      require("tiny-inline-diagnostic").setup {
+        -- preset = "powerline",
+      }
     end,
   },
 }

@@ -4,6 +4,7 @@ require "nvchad.options"
 
 vim.wo.number = true
 vim.wo.relativenumber = true
+vim.diagnostic.config { virtual_text = false }
 
 require("telescope").setup {
   defaults = {
