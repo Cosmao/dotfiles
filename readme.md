@@ -31,3 +31,7 @@ Backup of my dotfiles that use the following programs:
 
 ### dunst
  - dunst pywal
+
+### Python
+Om paket behövs fixas igen för pythonuppdatering \
+`paru -S $(pacman -Qoq /usr/lib/python3.12) --rebuild`
