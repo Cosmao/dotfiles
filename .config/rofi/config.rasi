@@ -12,7 +12,7 @@
 /* ---- Configuration ---- */
 configuration {
     modi:                       "drun,run";
-    font:                       "JetBrainsMono 13";
+    font:                       "JetBrainsMono 14";
     show-icons:                 true;
     icon-theme:                 "kora";
     display-drun:               "APPS";
@@ -28,7 +28,7 @@ configuration {
 }
 
 /* ---- Load pywal colors (custom wal template) ---- */
-@import "~/.cache/wal/colors-rofi-pywal"
+@import "~/.cache/wal/colors-rofi-dark.rasi"
 
 /* ---- Load border width ---- */
 @import "~/.config/rofi/rofi-border.rasi"
@@ -87,12 +87,9 @@ dummy {
 /* ---- Inputbar ---- */
 inputbar {
     enabled:                      true;
-    text-color:                   @foreground;
     spacing:                      10px;
     padding:                      15px;
     border-radius:                10px;
-    border-color:                 @foreground;
-    background-color:             @background;
     children:                     [ "textbox-prompt-colon", "entry" ];
 }
 
@@ -119,21 +116,17 @@ mode-switcher{
     enabled:                      true;
     spacing:                      20px;
     background-color:             transparent;
-    text-color:                   @foreground;
 }
 
 button {
     padding:                      10px;
     border-radius:                10px;
-    background-color:             @background;
     text-color:                   inherit;
     cursor:                       pointer;
     border:                       0px;
 }
 
 button selected {
-    background-color:             @color11;
-    text-color:                   @foreground;
 }
 
 /* ---- Listview ---- */
@@ -151,7 +144,6 @@ listview {
     spacing:                      0px;
     padding:                      10px;
     margin:                       0px;
-    background-color:             @background;
     border:0px;
 }
 
@@ -161,54 +153,39 @@ element {
     padding:                      10px;
     margin:                       5px;
     cursor:                       pointer;
-    background-color:             @background;
     border-radius:                10px;
-    border:                       @border-width;
 }
 
 element normal.normal {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element normal.urgent {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element normal.active {
     background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element selected.normal {
-    background-color:            @color11;
-    text-color:                  @foreground;
 }
 
 element selected.urgent {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element selected.active {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element alternate.normal {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element alternate.urgent {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element alternate.active {
     background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element-icon {
@@ -240,8 +217,6 @@ textbox {
     padding:                     15px;
     margin:                      0px;
     border-radius:               0px;
-    background-color:            @background;
-    text-color:                  @foreground;
     vertical-align:              0.5;
     horizontal-align:            0.0;
 }
@@ -249,6 +224,4 @@ textbox {
 error-message {
     padding:                     15px;
     border-radius:               20px;
-    background-color:            @background;
-    text-color:                  @foreground;
 }

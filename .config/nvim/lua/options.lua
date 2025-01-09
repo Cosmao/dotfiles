@@ -5,8 +5,6 @@ require "nvchad.options"
 vim.wo.number = true
 vim.wo.relativenumber = true
 
-vim.notify = require "notify"
-
 require("telescope").setup {
   defaults = {
     vimgrep_arguments = {

@@ -28,7 +28,7 @@ configuration {
 }
 
 /* ---- Load pywal colors (custom wal template) ---- */
-@import "~/.cache/wal/colors-rofi-pywal"
+@import "~/.cache/wal/colors-rofi-dark.rasi"
 
 /* ---- Load border width ---- */
 @import "~/.config/rofi/rofi-border.rasi"
@@ -51,7 +51,6 @@ window {
     fullscreen:                   false;
     enabled:                      true;
     border-radius:                10px;
-    background-color:             transparent;
 }
 
 /* ---- Mainbox ---- */
@@ -164,51 +163,6 @@ element {
     background-color:             @background;
     border-radius:                10px;
     border:                       @border-width;
-}
-
-element normal.normal {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element normal.urgent {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element normal.active {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element selected.normal {
-    background-color:            @color11;
-    text-color:                  @foreground;
-}
-
-element selected.urgent {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element selected.active {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element alternate.normal {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element alternate.urgent {
-    background-color:            inherit;
-    text-color:                  @foreground;
-}
-
-element alternate.active {
-    background-color:            inherit;
-    text-color:                  @foreground;
 }
 
 element-icon {

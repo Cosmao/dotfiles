@@ -1,8 +1,20 @@
-## Todo
-### wlogout
- - Fixa bakgrund med pywal
- - Fixa iconer för bilder
+## Cosmos dotfiles
+Backup of my dotfiles that use the following programs:
+ - Hyprland
+ - Hyprpaper
+ - Hypridle
+ - wlogout
+ - rofi
+ - dunst
+ - kitty
+ - lf
+ - neovim
+ - zsh
+ - ohmyposh
+ - pywal16
+ - waybar
 
+## Todo
 ### Wallpaper.sh
  - fzf för bilder med alternatv på den man väljer
 
@@ -17,8 +29,9 @@
 ### Firefox
  - Testa firefox pywal
 
-### SDDM
- - Fixa till SDDM så det inte bara är en svart skärm
-
 ### dunst
  - dunst pywal
+
+### Python
+Om paket behövs fixas igen för pythonuppdatering \
+`paru -S $(pacman -Qoq /usr/lib/python3.12) --rebuild`

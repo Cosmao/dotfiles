@@ -10,7 +10,11 @@ alias v='$EDITOR'
 alias vi='$EDITOR'
 alias vim='$EDITOR'
 alias wifi='nmtui'
+alias cat="bat"
+# -----------------------------------------------------
+# SCRIPTS
+# -----------------------------------------------------
 alias wallpaper="~/.config/scripts/wallpaper.sh"
 alias pacmanbak="~/.config/scripts/pacmanback.sh"
 alias mkrepo="~/.config/scripts/repo.sh"
-alias cat="bat"
+alias clean-trash="~/.config/scripts/clean_trash.sh"

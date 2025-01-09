@@ -2,6 +2,11 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
 version = 3
 final_space = true
 
+[upgrade]
+  notice = true
+  interval = "24h"
+  source = "cdn"
+
 [secondary_prompt]
   template = '❯❯ '
   foreground = 'magenta'

@@ -18,6 +18,17 @@ VERBOSE="false"
 ABSOLUTE="false"
 FUZZY="false"
 SHOWCOLOUR="true"
+BLURRED="current_blurred.png"
+BLURR="50x30"
+
+
+# -----------------------------------------------------
+# Program checks
+# -----------------------------------------------------
+command -v hyprctl >/dev/null 2>&1 || { echo >&2 "Requires hyprland to be installed, aborting."; exit 1;}
+command -v waybar >/dev/null 2>&1 || { echo >&2 "Requires waybar to be installed, aborting."; exit 1;}
+command -v wal >/dev/null 2>&1 || { echo >&2 "Requires pywal16 to be installed, aborting."; exit 1;}
+command -v magick >/dev/null 2>&1 || { echo >&2 "Requires magick to be installed, aborting."; exit 1;}
 
 # -----------------------------------------------------
 # Functions
@@ -118,6 +129,9 @@ setWallpaper(){
     echo "Shit went wrong yo."
   fi
 
+  generateBlurred $1 &
+  echo "Generating blurred async"
+
   if [ "$VERBOSE" == "true" ]; then
     echo "Done."
   fi
@@ -143,7 +157,7 @@ previewWallpaper(){
 
 getRandomPicture(){
   # Make an array of all the supported files in directory
-  PICS=($(find $DIR -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.jxl" -o -iname "*.webp" \)))
+  PICS=($(find "$DIR" -type f \( -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.jxl" -o -iname "*.webp" \) ! -name "current_blurred.png"))
 
   # Doublecheck that its not 0
   if (( ${#PICS[@]} == 0)); then
@@ -158,6 +172,10 @@ getRandomPicture(){
     [[ $ALREADYUSED -eq 1 ]] || break
   done
   FILE=$RANDOMPICS
+}
+
+generateBlurred(){
+  magick $1 -blur "$BLURR" "$DIR/$BLURRED"
 }
 
 usage(){
@@ -197,6 +215,12 @@ done
 # Make sure directory exists
 if [ ! -d $DIR ]; then
   echo "Wallpaper directory not found"
+  exit 1
+fi
+
+
+if [ "$TERM" != "xterm-kitty" ] && [ "$PREVIEW" == "true" ]; then
+  echo "Has to run inside kitty for preview to work, aborting."
   exit 1
 fi
 
