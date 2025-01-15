@@ -5,6 +5,7 @@ $mkdir -p ~/.trash
 
 # cmds
 #cmd trash $IFS="$(printf '\n\t')"; mv $fx ~/.trash
+#TODO: Someday fix it so it doesnt flicker my screen
 cmd trash ${{
   trash $fx
 }}
