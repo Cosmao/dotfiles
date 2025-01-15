@@ -15,6 +15,6 @@ alias cat="bat"
 # SCRIPTS
 # -----------------------------------------------------
 alias wallpaper="~/.config/scripts/wallpaper.sh"
-alias pacmanbak="~/.config/scripts/pacmanback.sh"
+alias systemclean="~/.config/scripts/pacmanback.sh"
 alias mkrepo="~/.config/scripts/repo.sh"
 alias clean-trash="~/.config/scripts/clean_trash.sh"
