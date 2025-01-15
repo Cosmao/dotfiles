@@ -4,7 +4,10 @@ set previewer ~/.config/lf/lf_kitty_preview
 $mkdir -p ~/.trash
 
 # cmds
-cmd trash $IFS="$(printf '\n\t')"; mv $fx ~/.trash
+#cmd trash $IFS="$(printf '\n\t')"; mv $fx ~/.trash
+cmd trash ${{
+  trash $fx
+}}
 
 cmd mkdir ${{
   printf "Directory Name: "
