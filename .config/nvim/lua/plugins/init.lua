@@ -99,6 +99,21 @@ return {
     config = function()
       require("tiny-inline-diagnostic").setup {
         preset = "modern",
+        options = {
+          add_messages = true,
+          softwrap = 30,
+          multilines = {
+            enabled = true,
+            always_show = false,
+          },
+          enable_on_insert = false,
+          overflow = {
+            mode = wrap,
+          },
+          virt_texts = {
+            priority = 2048,
+          },
+        },
       }
     end,
   },
