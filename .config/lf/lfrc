@@ -7,7 +7,7 @@ set previewer ~/.config/lf/lf_kitty_preview
 #cmd trash $IFS="$(printf '\n\t')"; mv $fx ~/.trash
 #TODO: Someday fix it so it doesnt flicker my screen
 cmd trash ${{
-  trash $fx
+  trash "$fx"
 }}
 
 cmd mkdir ${{
