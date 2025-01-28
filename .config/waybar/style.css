@@ -104,11 +104,11 @@ tooltip label {
 
 /* modules */
 .modules-left>widget:first-child>#workspaces {
-  margin-left: 10;
+  margin-left: 10px;
 }
 
 .modules-right>widget:last-child>#workspaces {
-  margin-right: 0;
+  margin-right: 0px;
 }
 
 /* clock */
