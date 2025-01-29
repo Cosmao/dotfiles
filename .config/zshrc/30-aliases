@@ -4,7 +4,7 @@
 alias c='clear'
 alias ls='eza -a --icons=always'
 alias ll='eza -al --icons=always'
-alias lt='eza -a --tree --level=3 --icons=always'
+alias lt='eza -a --tree --level=2 --icons=always'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias vi='$EDITOR'
@@ -15,5 +15,5 @@ alias cat="bat"
 # SCRIPTS
 # -----------------------------------------------------
 alias wallpaper="~/.config/scripts/wallpaper.sh"
-alias systemclean="~/.config/scripts/pacmanback.sh"
+alias clean="~/.config/scripts/pacmanback.sh"
 alias mkrepo="~/.config/scripts/repo.sh"
