@@ -13,24 +13,23 @@ Backup of my dotfiles that use the following programs:
  - ohmyposh
  - pywal16
  - waybar
+ - UWSM
 
 ## Todo
 ### Wallpaper.sh
  - fzf för bilder med alternatv på den man väljer
 
 ### Nvim
- - nvim snacks
  - Testa nvim pywal
-
-### Waybar
- - Större font
- - Datum?
 
 ### Firefox
  - Testa firefox pywal
 
 ### dunst
  - dunst pywal
+
+### SDDM
+ - Fixa SDDM så den startar UWSM > hyprland
 
 ### Python
 Om paket behövs fixas igen för pythonuppdatering \
