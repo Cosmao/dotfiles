@@ -2,9 +2,9 @@
 # ALIASES
 # -----------------------------------------------------
 alias c='clear'
-alias ls='eza -a --icons=always'
-alias ll='eza -al --icons=always'
-alias lt='eza -a --tree --level=2 --icons=always'
+alias ls='eza -a'
+alias ll='eza -al'
+alias lt='eza -a --tree --level=2'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias vi='$EDITOR'
