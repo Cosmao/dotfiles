@@ -39,3 +39,6 @@ lspconfig.ts_ls.setup {
 
 -- go
 require("lspconfig").gopls.setup {}
+
+-- python
+require("lspconfig").pylsp.setup {}
