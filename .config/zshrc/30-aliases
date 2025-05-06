@@ -7,7 +7,8 @@ alias ll='eza -al'
 alias lt='eza -a --tree --level=2'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
-alias vi='$EDITOR'
+alias vi="NVIM-APPNAME=nvim-nvchad nvim"
+alias kickstart="NVIM-APPNAME=nvim-kickstart nvim"
 alias vim='$EDITOR'
 alias wifi='nmtui'
 alias cat="bat"
