@@ -34,3 +34,6 @@ Backup of my dotfiles that use the following programs:
 ### Python
 Om paket behövs fixas igen för pythonuppdatering \
 `paru -S $(pacman -Qoq /usr/lib/python3.12) --rebuild`
+
+### restow
+`stow -v -R .`
