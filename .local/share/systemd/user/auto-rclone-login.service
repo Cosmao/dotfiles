@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=exec
-ExecStart=/usr/bin/rclone mount oneDrive: %h/onedrive --vfs-cache-mode=writes
+ExecStart=/usr/bin/rclone mount onedrive: %h/onedrive --vfs-cache-mode=writes
 ExecStop=/bin/fusermount -u %h/onedrive
 Restart=on-failure
 TimeoutStopSec=10
