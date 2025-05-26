@@ -2,12 +2,13 @@
 # ALIASES
 # -----------------------------------------------------
 alias c='clear'
-alias ls='eza -a --icons=always'
-alias ll='eza -al --icons=always'
-alias lt='eza -a --tree --level=2 --icons=always'
+alias ls='eza -a'
+alias ll='eza -al'
+alias lt='eza -a --tree --level=2'
 alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
-alias vi='$EDITOR'
+alias vi="NVIM_APPNAME=nvim-nvchad nvim"
+alias kickstart="NVIM_APPNAME=nvim-kickstart nvim"
 alias vim='$EDITOR'
 alias wifi='nmtui'
 alias cat="bat"
@@ -17,3 +18,4 @@ alias cat="bat"
 alias wallpaper="~/.config/scripts/wallpaper.sh"
 alias clean="~/.config/scripts/pacmanback.sh"
 alias mkrepo="~/.config/scripts/repo.sh"
+alias get_idf=". $HOME/esp/esp-idf/export.sh"

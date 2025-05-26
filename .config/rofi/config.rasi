@@ -41,9 +41,7 @@ window {
     spacing:                      0px;
     padding:                      0px;
     margin:                       0px; 
-    color:                        #FFFFFF;
     border:                       @border-width;
-    border-color:                 #FFFFFF;
     cursor:                       "default";
     transparency:                 "real";
     location:                     center;
@@ -51,7 +49,6 @@ window {
     fullscreen:                   false;
     enabled:                      true;
     border-radius:                10px;
-    background-color:             transparent;
 }
 
 /* ---- Mainbox ---- */
@@ -66,7 +63,6 @@ mainbox {
 /* ---- Imagebox ---- */
 imagebox {
     padding:                      18px;
-    background-color:             transparent;
     orientation:                  vertical;
     children:                     [ "inputbar", "dummy", "mode-switcher" ];
 }
@@ -74,14 +70,12 @@ imagebox {
 /* ---- Listbox ---- */
 listbox {
     spacing:                     20px;
-    background-color:            transparent;
     orientation:                 vertical;
     children:                    [ "message", "listview" ];
 }
 
 /* ---- Dummy ---- */
 dummy {
-    background-color:            transparent;
 }
 
 /* ---- Inputbar ---- */
@@ -98,30 +92,23 @@ textbox-prompt-colon {
     expand:                       false;
     str:                          "";
     padding:                      0px 5px 0px 0px;
-    background-color:             transparent;
-    text-color:                   inherit;
 }
 
 entry {
     enabled:                      true;
-    background-color:             transparent;
-    text-color:                   inherit;
     cursor:                       text;
     placeholder:                  "Search";
-    placeholder-color:            inherit;
 }
 
 /* ---- Mode Switcher ---- */
 mode-switcher{
     enabled:                      true;
     spacing:                      20px;
-    background-color:             transparent;
 }
 
 button {
     padding:                      10px;
     border-radius:                10px;
-    text-color:                   inherit;
     cursor:                       pointer;
     border:                       0px;
 }
@@ -156,48 +143,12 @@ element {
     border-radius:                10px;
 }
 
-element normal.normal {
-    background-color:            inherit;
-}
-
-element normal.urgent {
-    background-color:            inherit;
-}
-
-element normal.active {
-    background-color:            inherit;
-}
-
-element selected.urgent {
-    background-color:            inherit;
-}
-
-element selected.active {
-    background-color:            inherit;
-}
-
-element alternate.normal {
-    background-color:            inherit;
-}
-
-element alternate.urgent {
-    background-color:            inherit;
-}
-
-element alternate.active {
-    background-color:            inherit;
-}
-
 element-icon {
-    background-color:            transparent;
-    text-color:                  inherit;
     size:                        32px;
     cursor:                      inherit;
 }
 
 element-text {
-    background-color:            transparent;
-    text-color:                  inherit;
     cursor:                      inherit;
     vertical-align:              0.5;
     horizontal-align:            0.0;
@@ -205,7 +156,6 @@ element-text {
 
 /*****----- Message -----*****/
 message {
-    background-color:            transparent;
     border:0px;
     margin:20px 0px 0px 0px;
     padding:0px;

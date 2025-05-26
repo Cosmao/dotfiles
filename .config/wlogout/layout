@@ -10,7 +10,7 @@
 }
 {
     "label" : "hibernate",
-    "action" : "systemctl hibernate",
+    "action" : "~/.config/wlogout/kill_keepass.sh",
     "keybind" : "h"
 }
 {
