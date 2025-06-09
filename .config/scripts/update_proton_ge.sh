@@ -50,9 +50,9 @@ DIR_NAME=${TARBALL_NAME%.tar.gz}
 
 DIR_PATH="$HOME/.steam/steam/compatibilitytools.d/$DIR_NAME"
 STEAM_PATH="$(realpath "$HOME/.steam/steam/compatibilitytools.d")"
-TARGET_PATH="$(realpath "$DIR_PATH" 2>/dev/null)"
 
 if [ -d "$DIR_PATH" ]; then
+   TARGET_PATH="$(realpath "$DIR_PATH" 2>/dev/null)"
    while true; do
      read -rp "Version $DIR_NAME already installed, reinstall? (y/n) " yn
      case $yn in
@@ -66,6 +66,18 @@ if [ -d "$DIR_PATH" ]; then
          break;;
        [nN] ) exit 0; break;;
      esac
+   done
+else
+   while true; do
+      read -rp "Version $DIR_NAME found, install? (y/n) " yn
+      case $yn in
+         [yY] )
+            echo "Starting downloads."
+            break;;
+         [nN] ) 
+            exit 0; 
+            break;;
+      esac
    done
 fi
 
