@@ -48,11 +48,10 @@ TARBALL_NAME=$(basename "$TARBALL_URL")
 SHA512_NAME=$(basename "$SHA512_URL")
 DIR_NAME=${TARBALL_NAME%.tar.gz}
 
-DIR_PATH="$HOME/.steam/steam/compatibilitytools.d/$DIR_NAME"
 STEAM_PATH="$(realpath "$HOME/.steam/steam/compatibilitytools.d")"
 
-if [ -d "$DIR_PATH" ]; then
-   TARGET_PATH="$(realpath "$DIR_PATH" 2>/dev/null)"
+if [ -d "$STEAM_PATH/$DIR_NAME" ]; then
+   TARGET_PATH="$(realpath "$STEAM_PATH/$DIR_NAME" 2>/dev/null)"
    while true; do
      read -rp "Version $DIR_NAME already installed, reinstall? (y/n) " yn
      case $yn in
@@ -69,7 +68,7 @@ if [ -d "$DIR_PATH" ]; then
    done
 else
    while true; do
-      read -rp "Version $DIR_NAME found, install? (y/n) " yn
+      read -rp "Version $DIR_NAME not installed, install now? (y/n) " yn
       case $yn in
          [yY] )
             echo "Starting downloads."
@@ -89,8 +88,6 @@ curl -# -L "$SHA512_URL" -o "$SHA512_NAME" --progress-bar
 
 echo "Verifying sha512"
 sha512sum -c "$SHA512_NAME"
-
-mkdir -p "$STEAM_PATH"
 
 echo "Extracting $TARBALL_NAME to Steam directory"
 tar -xf "$TARBALL_NAME" -C "$STEAM_PATH"
