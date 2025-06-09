@@ -5,8 +5,8 @@ StopWhenUnneeded=true
 
 [Service]
 Type=oneshot
-ExecStart=/bin/fusermount -u %h/onedrive
-ExecStop=/usr/bin/rclone mount onedrive: %h/onedrive --vfs-cache-mode=writes
+ExecStart=/bin/umount -R -q /home/emil/onedrive
+ExecStop=/usr/bin/rclone mount onedrive: /home/emil/onedrive --vfs-cache-mode=writes
 RemainAfterExit=true
 
 [Install]
