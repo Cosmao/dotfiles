@@ -36,7 +36,17 @@ return { -- Collection of various small independent plugins/modules
       --return '%2l:%-2v'
       --end,
     }
+
+    require('mini.tabline').setup {
+      show_icons = true,
+      format = nil,
+    }
   end,
 
-  keys = { { '<leader>m', ':lua MiniFiles.open()<CR>', desc = 'Open MiniFiles' } },
+  keys = {
+    { '<leader>m', ':lua MiniFiles.open()<CR>', desc = 'Open MiniFiles' },
+    { '<TAB>', ':bnext<CR>', desc = 'Next tab' },
+    { '<S-TAB>', ':bprevious<CR>', desc = 'Previous tab' },
+    { '<leader>x', ':b#|bd#<CR>', desc = 'Close buffer' },
+  },
 }
