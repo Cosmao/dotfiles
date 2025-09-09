@@ -39,15 +39,20 @@ function get_urls(){
          local ASSET_NAME=$(echo "$CURL_RESPONSE" | jq -r ."[$num].assets[$i].name")
          if echo "$ASSET_NAME" | rg -q ".tar.gz" ; then
             TARBALL_URL=$(echo "$CURL_RESPONSE" | jq -r ."[$num].assets[$i].browser_download_url")
+            if [[ ! -z "$SHA512_URL" ]]; then
+               break
+            fi
          fi
          if echo "$ASSET_NAME" | rg -q ".sha512sum" ; then
             SHA512_URL=$(echo "$CURL_RESPONSE" | jq -r ."[$num].assets[$i].browser_download_url")
+            if [[ ! -z "$TARBALL_URL" ]]; then
+               break
+            fi
          fi
       done
 
       if [ -z "$TARBALL_URL" ] || [ -z "$SHA512_URL" ]; then
          echo "Could not find URLs"
-         continue
       else
          echo "$VERSION found"
          TARBALLS["$VERSION"]="$TARBALL_URL"
