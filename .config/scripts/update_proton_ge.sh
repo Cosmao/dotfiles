@@ -7,6 +7,7 @@ declare -A INSTALLED
 
 RELEASES_URL="https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases"
 #STEAM_PATH="$(realpath "$HOME/.steam/steam/compatibilitytools.d")"
+STEAM_PATH="$(realpath "$HOME/proton-ge-test")"
 
 for tool in jq rg sha512sum curl tar basename realpath; do
     command -v $tool >/dev/null 2>&1 || { echo >&2 "$tool is required but not installed."; exit 1; }
@@ -62,9 +63,6 @@ function get_urls(){
    done
 }
 
-   #local TARBALL_NAME=$(basename "$TARBALL_URL")
-   #local SHA512_NAME=$(basename "$SHA512_URL")
-   #local DIR_NAME=${TARBALL_NAME%.tar.gz}
 
 function download(){
    echo "Downloading tarball: $TARBALL_NAME"
@@ -114,8 +112,70 @@ function check_if_installed(){
    fi
 }
 
+function install_version(){
+   local version="$1"
+
+   #local TARBALL_NAME=$(basename "$TARBALL_URL")
+   #local SHA512_NAME=$(basename "$SHA512_URL")
+   #local DIR_NAME=${TARBALL_NAME%.tar.gz}
+}
+
+function handle_version() {
+    local version="$1"
+    echo "You selected: $version"
+
+    if [ "${INSTALLED[$version]}" -eq 1 ]; then
+        echo "Options for $version:"
+        select action in "Reinstall" "Uninstall" "Cancel"; do
+            case $action in
+                Reinstall) reinstall_version "$version" ;;
+                Uninstall) uninstall_version "$version" ;;
+                Cancel) echo "Cancelled" ;;
+            esac
+            break
+        done
+    else
+        echo "Options for $version:"
+        select action in "Install" "Cancel"; do
+            case $action in
+                Install) install_version "$version" ;;
+                Cancel) echo "Cancelled" ;;
+            esac
+            break
+        done
+    fi
+}
+
+function show_menu() {
+    echo ""
+    echo "Available versions:"
+
+    local versions=()
+    local idx=1
+    for version in "${!TARBALLS[@]}"; do
+        if [ "${INSTALLED[$version]}" -eq 1 ]; then
+            echo "  $idx) $version [INSTALLED]"
+        else
+            echo "  $idx) $version"
+        fi
+        versions+=("$version")
+        ((idx++))
+    done
+    echo "  $idx) Quit"
+
+    read -p "Choose an option: " choice
+
+    if (( choice >= 1 && choice < idx )); then
+        local version="${versions[$((choice-1))]}"
+        handle_version "$version"
+    elif (( choice == idx )); then
+        echo "Exiting..."
+    else
+        echo "Invalid choice"
+    fi
+}
+
 get_urls "$RELEASES_URL"
-check_if_installed
-download
+show_menu
 
 exit 0
