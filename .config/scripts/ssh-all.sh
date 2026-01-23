@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xeu
+set -euo
 : "${SSH_AUTH_SOCK?No ssh-agent running}"
 shopt -s nullglob
 
