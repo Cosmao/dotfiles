@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo
+set -euo pipefail
 : "${SSH_AUTH_SOCK?No ssh-agent running}"
 shopt -s nullglob
 
