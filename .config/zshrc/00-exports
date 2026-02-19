@@ -5,3 +5,4 @@ export EDITOR=nvim
 export PATH="$PATH:/home/emil/.local/bin"
 export PATH="$PATH:/usr/lib/ccache/bin/"
 export ZSH="$HOME/.oh-my-zsh"
+export AMD_VULKAN_ICD=RADV
