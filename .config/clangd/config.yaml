@@ -1,8 +1,0 @@
-CompileFlags:
-  # Strip GCC flags that Clang/clangd doesn't understand.
-  # These come from ESP-IDF's compile_commands.json and are xtensa-gcc specific.
-  Remove:
-    - -mlongcalls
-    - -mtext-section-literals
-    - -fno-tree-switch-conversion
-    - -fstrict-volatile-bitfields
