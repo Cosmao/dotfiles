@@ -148,7 +148,14 @@ return {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            -- Allow clangd to interrogate the xtensa-gcc toolchain for system
+            -- includes and defines. Covers ESP-IDF 4.x and 5.x toolchain paths.
+            '--query-driver=' .. vim.fn.expand '~' .. '/.espressif/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
+          },
+        },
         -- gopls = {},
         pyright = {},
         -- rust_analyzer = {},
