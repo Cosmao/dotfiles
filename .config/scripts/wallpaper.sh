@@ -74,7 +74,7 @@ setHyprpaper(){
     echo "Writing to hyprpaper.conf"
   fi
   sed -i "s|^preload.*|preload = ${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
-  sed -i "s|^wallpaper.*|wallpaper = ,${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
+  sed -i "s|^path.*|path = ,${1}|" "$(realpath ~/.config/hypr/hyprpaper.conf)"
 
   return 0
 }
