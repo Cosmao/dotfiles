@@ -46,7 +46,6 @@ bindkey "^j" history-search-forward
 # Source programs
 # -----------------------------------------------------
 source <(fzf --zsh)
-source <(zoxide init --cmd cd zsh)
 
 # -----------------------------------------------------
 # zsh History
