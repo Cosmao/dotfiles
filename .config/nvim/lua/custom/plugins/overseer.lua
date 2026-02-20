@@ -8,7 +8,7 @@ return {
     }
 
     local idf_tasks = {
-      { name = 'ESP-IDF: Full Clean', cmd = { 'idf.py', 'fullclean' } },
+      { name = 'ESP-IDF: Fullclean', cmd = { 'idf.py', 'fullclean' } },
       { name = 'ESP-IDF: Build', cmd = { 'idf.py', 'build' } },
       { name = 'ESP-IDF: Flash', cmd = { 'idf.py', 'flash' } },
       { name = 'ESP-IDF: Flash & Monitor', cmd = { 'idf.py', 'flash', 'monitor' } },
