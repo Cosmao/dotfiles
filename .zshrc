@@ -14,6 +14,9 @@
 # Load modular configarion
 # -----------------------------------------------------
 
-for file in ~/.config/zshrc/*; do 
+for file in ~/.config/zshrc/*; do
   source "$file"
 done
+
+# zoxide must be initialized last
+source <(zoxide init --cmd cd zsh)
