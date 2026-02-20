@@ -3,7 +3,9 @@ return {
   opts = {},
   config = function()
     local overseer = require 'overseer'
-    overseer.setup {}
+    overseer.setup {
+      form = { border = 'rounded' },
+    }
 
     local idf_tasks = {
       { name = 'ESP-IDF: Full Clean', cmd = { 'idf.py', 'fullclean' } },
@@ -40,6 +42,17 @@ return {
             end,
           })
         end
+        table.insert(templates, {
+          name = 'ESP-IDF: Custom',
+          params = {
+            args = { type = 'string', name = 'Arguments', order = 1 },
+          },
+          builder = function(params)
+            return {
+              cmd = vim.list_extend({ 'idf.py' }, vim.split(params.args, ' ')),
+            }
+          end,
+        })
         cb(templates)
       end,
     }
