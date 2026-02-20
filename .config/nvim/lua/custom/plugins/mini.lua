@@ -50,6 +50,7 @@ return { -- Collection of various small independent plugins/modules
     { '<leader>m', ':lua MiniFiles.open()<CR>', desc = 'Open MiniFiles' },
     { '<TAB>', ':bnext<CR>', desc = 'Next tab' },
     { '<S-TAB>', ':bprevious<CR>', desc = 'Previous tab' },
+    { '<leader>bn', ':enew<CR>', desc = '[B]uffer [N]ew' },
     { '<leader>x', function() MiniBufremove.delete() end, desc = 'Close buffer' },
   },
 }
