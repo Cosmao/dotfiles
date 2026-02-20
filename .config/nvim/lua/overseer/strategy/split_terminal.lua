@@ -1,32 +1,46 @@
--- Custom overseer strategy that runs the task in a horizontal split using
--- vim.fn.termopen(), giving a fully interactive terminal (keyboard input,
--- curses apps, etc.). The split stays open alongside other buffers.
+-- Custom overseer strategy that runs the task in a fullscreen floating
+-- terminal. When the process exits the float closes automatically,
+-- restoring the previous window layout.
 local M = {}
 M.__index = M
 
 function M.new(_opts)
-  return setmetatable({ job_id = nil, bufnr = nil }, M)
+  return setmetatable({ job_id = nil, bufnr = nil, win = nil }, M)
 end
 
 function M:start(task)
-  vim.cmd 'enew'
-  self.bufnr = vim.api.nvim_get_current_buf()
+  local buf = vim.api.nvim_create_buf(false, true)
+  self.bufnr = buf
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = 'editor',
+    width = vim.o.columns,
+    height = vim.o.lines - 2,
+    row = 0,
+    col = 0,
+    style = 'minimal',
+    border = 'none',
+    zindex = 200,
+  })
+  self.win = win
+
   self.job_id = vim.fn.termopen(task.cmd, {
     on_exit = function(_, code)
+      -- Close the float as soon as the process exits
+      vim.schedule(function()
+        if self.win and vim.api.nvim_win_is_valid(self.win) then
+          vim.api.nvim_win_close(self.win, true)
+          self.win = nil
+        end
+        if self.bufnr and vim.api.nvim_buf_is_valid(self.bufnr) then
+          vim.api.nvim_buf_delete(self.bufnr, { force = true })
+          self.bufnr = nil
+        end
+      end)
       task:on_exit(code)
     end,
   })
-  -- termopen can mark the buffer as unlisted; force it into the tabline
-  vim.bo[self.bufnr].buflisted = true
-  -- bufhidden=hide keeps the buffer alive when its window is closed so the
-  -- user can navigate back to it via the tabline
-  vim.bo[self.bufnr].bufhidden = 'hide'
-  -- Give it a recognisable name instead of the raw term:// URI
-  vim.schedule(function()
-    if vim.api.nvim_buf_is_valid(self.bufnr) then
-      pcall(vim.api.nvim_buf_set_name, self.bufnr, task.name)
-    end
-  end)
+  vim.cmd 'startinsert'
 end
 
 function M:stop()
@@ -42,8 +56,13 @@ end
 
 function M:dispose()
   self:stop()
+  if self.win and vim.api.nvim_win_is_valid(self.win) then
+    vim.api.nvim_win_close(self.win, true)
+    self.win = nil
+  end
   if self.bufnr and vim.api.nvim_buf_is_valid(self.bufnr) then
     vim.api.nvim_buf_delete(self.bufnr, { force = true })
+    self.bufnr = nil
   end
 end
 

@@ -5,17 +5,13 @@ return {
     local overseer = require 'overseer'
     overseer.setup {}
 
-    -- NOTE: Tasks only appear when sdkconfig or sdkconfig.defaults is present
-    -- in cwd, indicating an ESP-IDF project
-    -- NOTE: Tasks only appear when sdkconfig or sdkconfig.defaults is present
-    -- in cwd, indicating an ESP-IDF project
     local idf_tasks = {
       { name = 'ESP-IDF: Full Clean', cmd = { 'idf.py', 'fullclean' } },
       { name = 'ESP-IDF: Build', cmd = { 'idf.py', 'build' } },
       { name = 'ESP-IDF: Flash', cmd = { 'idf.py', 'flash' } },
       { name = 'ESP-IDF: Flash & Monitor', cmd = { 'idf.py', 'flash', 'monitor' } },
-      -- NOTE: Menuconfig uses split_terminal to open in the current window as
-      -- a proper interactive terminal since it is a curses TUI
+      -- NOTE: Menuconfig uses split_terminal which opens a fullscreen floating
+      -- terminal; the float auto-closes when menuconfig exits
       {
         name = 'ESP-IDF: Menuconfig',
         cmd = { 'idf.py', 'menuconfig' },
@@ -23,24 +19,30 @@ return {
       },
     }
 
-    for _, task in ipairs(idf_tasks) do
-      local t = task
-      overseer.register_template {
-        name = t.name,
-        condition = {
-          callback = function()
-            return vim.fn.filereadable(vim.fn.getcwd() .. '/sdkconfig') == 1
-              or vim.fn.filereadable(vim.fn.getcwd() .. '/sdkconfig.defaults') == 1
-          end,
-        },
-        builder = function()
-          return {
-            cmd = t.cmd,
-            strategy = t.menuconfig and 'split_terminal' or 'jobstart',
-          }
-        end,
-      }
-    end
+    -- Use a generator so the check runs each time OverseerRun is opened,
+    -- returning no tasks when $IDF_PATH is not set
+    overseer.register_template {
+      name = 'ESP-IDF',
+      generator = function(opts, cb)
+        if not vim.env.IDF_PATH then
+          return cb {}
+        end
+        local templates = {}
+        for _, task in ipairs(idf_tasks) do
+          local t = task
+          table.insert(templates, {
+            name = t.name,
+            builder = function()
+              return {
+                cmd = t.cmd,
+                strategy = t.menuconfig and 'split_terminal' or 'jobstart',
+              }
+            end,
+          })
+        end
+        cb(templates)
+      end,
+    }
   end,
 
   keys = {
