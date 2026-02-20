@@ -1,6 +1,7 @@
 return { -- Collection of various small independent plugins/modules
   'echasnovski/mini.nvim',
   version = false,
+  lazy = false,
   -- Better Around/Inside textobjects
   --
   config = function()
@@ -18,6 +19,8 @@ return { -- Collection of various small independent plugins/modules
     require('mini.surround').setup()
 
     require('mini.files').setup()
+
+    require('mini.bufremove').setup()
 
     require('mini.statusline').setup {
 
@@ -47,6 +50,6 @@ return { -- Collection of various small independent plugins/modules
     { '<leader>m', ':lua MiniFiles.open()<CR>', desc = 'Open MiniFiles' },
     { '<TAB>', ':bnext<CR>', desc = 'Next tab' },
     { '<S-TAB>', ':bprevious<CR>', desc = 'Previous tab' },
-    { '<leader>x', ':b#|bd#<CR>', desc = 'Close buffer' },
+    { '<leader>x', function() MiniBufremove.delete() end, desc = 'Close buffer' },
   },
 }
