@@ -5,3 +5,4 @@ nvim
 
 spell/
 lazy-lock.json
+lua/custom/plugins/rsync_hosts.lua
