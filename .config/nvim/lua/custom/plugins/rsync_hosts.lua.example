@@ -1,0 +1,6 @@
+-- Copy this file to rsync_hosts.lua and fill in your hosts.
+-- rsync_hosts.lua is gitignored and will not be committed.
+return {
+  { name = 'Rsync: host-1', dest = 'user@host:~/path' },
+  { name = 'Rsync: host-2', dest = 'user@host:~/path' },
+}

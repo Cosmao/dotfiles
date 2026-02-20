@@ -56,6 +56,34 @@ return {
         cb(templates)
       end,
     }
+
+    local ok, rsync_hosts = pcall(require, 'custom.plugins.rsync_hosts')
+    if not ok then
+      rsync_hosts = {}
+    end
+
+    overseer.register_template {
+      name = 'Rsync',
+      generator = function(opts, cb)
+        local ignore_file = vim.fn.getcwd() .. '/.rsync_ignore'
+        if vim.fn.filereadable(ignore_file) == 0 then
+          return cb {}
+        end
+        local templates = {}
+        for _, host in ipairs(rsync_hosts) do
+          local h = host
+          table.insert(templates, {
+            name = h.name,
+            builder = function()
+              return {
+                cmd = { 'rsync', '-avz', '--exclude-from=.rsync_ignore', './', h.dest },
+              }
+            end,
+          })
+        end
+        cb(templates)
+      end,
+    }
   end,
 
   keys = {
