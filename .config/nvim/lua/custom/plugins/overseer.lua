@@ -12,6 +12,10 @@ return {
       { name = 'ESP-IDF: Build', cmd = { 'idf.py', 'build' } },
       { name = 'ESP-IDF: Flash', cmd = { 'idf.py', 'flash' } },
       { name = 'ESP-IDF: Flash & Monitor', cmd = { 'idf.py', 'flash', 'monitor' } },
+      {
+        name = 'ESP-IDF: Test Flash & Monitor',
+        cmd = { 'sh', '-c', 'cp sdkconfig test/sdkconfig && idf.py -C test flash monitor' },
+      },
       -- NOTE: Menuconfig uses split_terminal which opens a fullscreen floating
       -- terminal; the float auto-closes when menuconfig exits
       {
