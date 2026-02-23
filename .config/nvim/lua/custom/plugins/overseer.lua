@@ -57,7 +57,7 @@ return {
       end,
     }
 
-    local ok, rsync_hosts = pcall(require, 'custom.plugins.rsync_hosts')
+    local ok, rsync_hosts = pcall(require, 'custom.rsync_hosts')
     if not ok then
       rsync_hosts = {}
     end
