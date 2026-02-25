@@ -3,8 +3,8 @@ version = 3
 final_space = true
 
 [upgrade]
-  notice = true
-  interval = "24h"
+  notice = false
+  interval = "168h"
   source = "cdn"
 
 [secondary_prompt]
@@ -45,6 +45,27 @@ final_space = true
       cache_duration = 'none'
       commit_icon = '@'
       fetch_status = true
+
+  [[blocks.segments]]
+    template = ' ({{ .Venv }})'
+    foreground = 'cyan'
+    background = 'transparent'
+    type = 'python'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
+      display_mode = 'environment'
+
+  [[blocks.segments]]
+    template = '{{ if .Env.IDF_PATH }} ESP-IDF {{ .Env.IDF_VERSION }}{{ end }}'
+    foreground = 'yellow'
+    background = 'transparent'
+    type = 'text'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      cache_duration = 'none'
 
 [[blocks]]
   type = 'rprompt'
