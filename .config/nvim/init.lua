@@ -177,7 +177,6 @@ require('lazy').setup({
   require 'kickstart.plugins.conform',
   require 'kickstart.plugins.cmp',
   require 'kickstart.plugins.treesitter',
-  require 'kickstart.plugins.debug',
   require 'kickstart.plugins.lint',
 
   { import = 'custom.plugins' },
