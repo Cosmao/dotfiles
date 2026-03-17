@@ -19,6 +19,6 @@ post_hook = "pkill -SIGUSR2 waybar"
 input_path = "~/.config/matugen/templates/rofi-colors.rasi"
 output_path = "~/.config/rofi/colors.rasi"
 
-# [templates.neovim]
-# input_path = "~/.config/matugen/templates/nvim-colors.vim"
-# output_path = "~/.config/nvim/colors/matugen.vim"
+[templates.neovim]
+input_path = "~/.config/matugen/templates/nvim-matugen-palette.lua"
+output_path = "~/.config/nvim/lua/matugen_palette.lua"
