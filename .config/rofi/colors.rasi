@@ -1,12 +1,70 @@
 * {
-    background:              #18120c;
-    background-alt:          #251e17;
-    foreground:              #eee0d4;
-    selected:                #f7bb71;
-    selected-foreground:     #472a00;
-    active:                  #bbcd9e;
-    active-foreground:       #273513;
+    background:              #161217;
+    background-alt:          #231e23;
+    foreground:              #e9e0e7;
+    selected:                #e3b7f4;
+    selected-foreground:     #442254;
+    active:                  #f5b7b6;
+    active-foreground:       #4c2525;
     urgent:                  #ffb4ab;
     urgent-foreground:       #690005;
-    border-color:            #9c8e80;
+    border-color:            #978e97;
+
+    background-color:        @background;
+    text-color:              @foreground;
+}
+
+window {
+    background-color: @background;
+    border-color:     @border-color;
+}
+
+inputbar {
+    background-color: @background-alt;
+    text-color:       @foreground;
+}
+
+element normal.normal {
+    background-color: @background;
+    text-color:       @foreground;
+}
+
+element normal.urgent {
+    background-color: @urgent;
+    text-color:       @urgent-foreground;
+}
+
+element normal.active {
+    background-color: @active;
+    text-color:       @active-foreground;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color:       @selected-foreground;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color:       @urgent-foreground;
+}
+
+element selected.active {
+    background-color: @active;
+    text-color:       @active-foreground;
+}
+
+element alternate.normal {
+    background-color: @background;
+    text-color:       @foreground;
+}
+
+element alternate.urgent {
+    background-color: @urgent;
+    text-color:       @urgent-foreground;
+}
+
+element alternate.active {
+    background-color: @active;
+    text-color:       @active-foreground;
 }
