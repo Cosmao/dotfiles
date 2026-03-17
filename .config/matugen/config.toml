@@ -18,7 +18,7 @@ post_hook = "pkill -SIGUSR2 waybar"
 [templates.dunst]
 input_path = "~/.config/matugen/templates/dunstrc"
 output_path = "~/.config/dunst/dunstrc"
-post_hook = "pkill dunst; dunst &"
+post_hook = "pkill dunst; dunst >/dev/null 2>&1 &"
 
 [templates.rofi]
 input_path = "~/.config/matugen/templates/rofi-colors.rasi"
