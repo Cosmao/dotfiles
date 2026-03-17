@@ -109,7 +109,7 @@ fi
 # -----------------------------------------------------
 # Preview
 # -----------------------------------------------------
-kitty +icat "$FILE"
+magick "$FILE" -resize 800x500\> png:- | kitty +icat --stdin yes
 echo
 
 read -rp "Use this wallpaper? (y/n) " -n 1
