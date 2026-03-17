@@ -27,8 +27,8 @@ configuration {
     window-format:              "{w} · {c} · {t}";
 }
 
-/* ---- Load pywal colors (custom wal template) ---- */
-@import "~/.cache/wal/colors-rofi-dark.rasi"
+/* ---- Load matugen colors ---- */
+@import "colors.rasi"
 
 /* ---- Load border width ---- */
 @import "~/.config/rofi/rofi-border.rasi"
