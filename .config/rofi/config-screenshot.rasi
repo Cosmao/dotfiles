@@ -27,8 +27,8 @@ configuration {
     
 }
 
-/* ---- Load pywal colors (custom wal template) ---- */
-@import "~/.cache/wal/colors-rofi-dark.rasi"
+/* ---- Load matugen colors ---- */
+@import "colors.rasi"
 
 /* ---- Load border width ---- */
 @import "~/.config/rofi/rofi-border.rasi"
@@ -131,7 +131,7 @@ button {
 }
 
 button selected {
-    background-color:             @color11;
+    background-color:             @active;
     text-color:                   @foreground;
 }
 
