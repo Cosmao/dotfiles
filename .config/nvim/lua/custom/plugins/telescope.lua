@@ -63,6 +63,31 @@ return {
     vim.keymap.set('n', '<leader>sn', function()
       builtin.find_files { cwd = vim.fn.stdpath 'config' }
     end, { desc = '[S]earch [N]eovim files' })
+
+    -- Theme picker with persistence
+    local theme_file = vim.fn.stdpath 'data' .. '/colorscheme'
+    vim.keymap.set('n', '<leader>ft', function()
+      builtin.colorscheme {
+        enable_preview = true,
+        attach_mappings = function(prompt_bufnr, _)
+          local actions = require 'telescope.actions'
+          local action_state = require 'telescope.actions.state'
+          actions.select_default:replace(function()
+            local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            if selection then
+              vim.cmd.colorscheme(selection.value)
+              local f = io.open(theme_file, 'w')
+              if f then
+                f:write(selection.value)
+                f:close()
+              end
+            end
+          end)
+          return true
+        end,
+      }
+    end, { desc = '[F]ind [T]heme' })
   end,
 }
 
