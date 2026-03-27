@@ -1,24 +1,32 @@
-return {
-  -- You can easily change to a different colorscheme.
-  -- Change the name of the colorscheme plugin below, and then
-  -- change the command in the config to whatever the name of that colorscheme is.
-  --
-  -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  'folke/tokyonight.nvim',
-  priority = 1000, -- Make sure to load this before all the other start plugins.
-  config = function()
-    ---@diagnostic disable-next-line: missing-fields
-    require('tokyonight').setup {
-      styles = {
-        comments = { italic = false }, -- Disable italics in comments
-      },
-    }
+local theme_file = vim.fn.stdpath 'data' .. '/colorscheme'
 
-    -- Load the colorscheme here.
-    -- Like many other themes, this one has different styles, and you could load
-    -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-    vim.cmd.colorscheme 'tokyonight-night'
-  end,
+return {
+  { 'catppuccin/nvim', name = 'catppuccin' },
+  { 'rose-pine/neovim', name = 'rose-pine' },
+  {
+    'folke/tokyonight.nvim',
+    priority = 1000,
+    config = function()
+      local f = io.open(theme_file, 'r')
+      local theme = f and f:read '*l' or 'tokyonight-night'
+      if f then
+        f:close()
+      end
+
+      local transparent = theme == 'tokyonight-transparent'
+      require('tokyonight').setup {
+        transparent = transparent,
+        styles = { comments = { italic = false } },
+      }
+
+      -- Load tokyonight-night directly when transparent to avoid nested
+      -- :colorscheme calls which break highlight groups on startup
+      local load_theme = transparent and 'tokyonight-night' or theme
+      if not pcall(vim.cmd.colorscheme, load_theme) then
+        vim.cmd.colorscheme 'tokyonight-night'
+      end
+    end,
+  },
 }
 
 -- vim: ts=2 sts=2 sw=2 et

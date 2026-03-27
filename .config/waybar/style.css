@@ -7,14 +7,14 @@
 */
 
 
-/* pywal colors */
-@import 'colors-waybar.css';
-@define-color ws @color4;
-@define-color tt @color1;
-@define-color clock @color3;
-@define-color set @color4;
+/* matugen colors */
+@import 'colors.css';
+@define-color ws @primary;
+@define-color tt @surface_container;
+@define-color clock @tertiary;
+@define-color set @secondary_container;
 @define-color tb rgba(200, 200, 200, 0.2);
-@define-color tbh @color5;
+@define-color tbh @secondary;
 @define-color text #FFFFFF;
 
 /* general */
