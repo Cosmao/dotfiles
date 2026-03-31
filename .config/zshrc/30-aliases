@@ -17,6 +17,7 @@ alias cat="bat"
 # -----------------------------------------------------
 alias clean="~/.config/scripts/pacmanback.sh"
 alias mkrepo="~/.config/scripts/repo.sh"
-alias get_idf=". $HOME/esp/esp-idf/export.sh"
+alias get_idf=". $HOME/work/esp/esp-idf/export.sh"
+alias restow="~/.config/scripts/restow.sh"
 alias pacinfo="~/.config/scripts/pacinfo.sh"
 alias ssh-all="~/.config/scripts/ssh-all.sh"

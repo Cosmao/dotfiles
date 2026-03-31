@@ -1,0 +1,13 @@
+[Unit]
+Description=RClone OneDrive Mount
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/rclone mount onedrive: %h/onedrive --vfs-cache-mode full --vfs-cache-max-size 10G
+ExecStop=/usr/bin/fusermount3 -u %h/onedrive
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
