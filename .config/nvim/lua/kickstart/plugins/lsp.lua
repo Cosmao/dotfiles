@@ -157,7 +157,7 @@ return {
           'clangd',
           -- Allow clangd to interrogate the xtensa-gcc toolchain for system
           -- includes and defines. Covers ESP-IDF 4.x and 5.x toolchain paths.
-          '--query-driver=' .. vim.fn.expand '~' .. '/.espressif/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
+          '--query-driver=' .. vim.fn.expand '~' .. '/work/espressif/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
         },
       })
 
