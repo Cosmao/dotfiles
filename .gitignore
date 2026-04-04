@@ -1,2 +1,14 @@
 .config/zshrc/10-secrets
+.claude/
 .git/
+
+# Neovim generated files
+.config/nvim/lazy-lock.json
+
+# Matugen generated outputs
+.config/hypr/colors.conf
+.config/kitty/themes/Matugen.conf
+.config/waybar/colors.css
+.config/dunst/dunstrc
+.config/rofi/colors.rasi
+.config/nvim/lua/matugen_palette.lua

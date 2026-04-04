@@ -2,7 +2,8 @@
 # Exports
 # -----------------------------------------------------
 export EDITOR=nvim
-export PATH="/home/emilk/.local/bin/:/usr/lib/ccache/bin/:$PATH"
+export PATH="$HOME/.local/bin:/usr/lib/ccache/bin/:$PATH"
 export ZSH="$HOME/.oh-my-zsh"
 export WALLPAPERPATH="$HOME/Wallpapers/"
 export GOBIN="$HOME/.local/bin"
+export IDF_TOOLS_PATH="$HOME/work/espressif"
