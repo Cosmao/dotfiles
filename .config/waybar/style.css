@@ -228,6 +228,17 @@ tooltip label {
   -gtk-icon-effect: highlight;
 }
 
+/* playerctl */
+#custom-playerctl {
+  background-color: @set;
+  font-size: 16px;
+  color: @text;
+  border-radius: 5px;
+  padding: 1px 10px 0px 10px;
+  margin: 4px 1px;
+  opacity: 0.9;
+}
+
 /* custom modules */
 #custom-exit {
   margin: 0px 18px 0px 5px;
