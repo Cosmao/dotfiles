@@ -38,6 +38,14 @@ Neovim themes are switchable at runtime with `<leader>ft`. Available themes: tok
 | `SUPER+V` | Clipboard history (cliphist) |
 | `CTRL+META+Q` | Lock screen |
 
+### TODO
+
+- [ ] Secure boot setup
+- [ ] Hibernate support
+- [ ] Spotify install
+- [ ] Fix missing hardware icon in waybar (U+E473 — needs correct nerd font package)
+- [ ] Printer setup (cups + avahi)
+
 ### Notes
 
 **Restow after clone:**

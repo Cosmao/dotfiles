@@ -33,6 +33,7 @@
         
        "modules-right": [
            "group/hardware",
+           "custom/playerctl",
            "pulseaudio",
            "bluetooth",
            "network",

@@ -72,7 +72,7 @@
 	
 	// system
 	"custom/system": {
-		"format": "<span size='small'>  </span>",
+		"format": "<span size='small'> 󰒋 </span>",
 		"tooltip": false
 	},
 	
@@ -98,10 +98,18 @@
 	
 	// memory
 	"memory": {
-		"format": "  {}% ",
+		"format": " 󰆼 {}% ",
 		"on-click": "kitty btop"
 	},
 	
+	// media
+	"custom/playerctl": {
+		"exec": "playerctl --ignore-player=firefox metadata --format '{{ artist }} - {{ title }}'",
+		"exec-if": "playerctl --ignore-player=firefox status 2>/dev/null",
+		"interval": 2,
+		"max-length": 45
+	},
+
 	// audio
 	"pulseaudio": {
 		"scroll-step": 1,
