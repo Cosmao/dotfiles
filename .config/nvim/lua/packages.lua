@@ -1,0 +1,17 @@
+vim.pack.add { 'https://github.com/nvim-lua/plenary.nvim' }
+vim.pack.add { 'https://github.com/nvim-tree/nvim-web-devicons' }
+require 'packages.mini'
+require 'packages.which-key'
+require 'packages.cmp'
+require 'packages.snacks'
+require 'packages.colorscheme'
+require 'packages.autopairs'
+require 'packages.todo-comments'
+require 'packages.gitsigns'
+require 'packages.indent-line'
+require 'packages.overseer'
+require 'packages.telescope'
+require 'packages.treesitter'
+require 'packages.lsp.lsp'
+require 'packages.lsp.conform'
+require 'packages.lsp.lint'

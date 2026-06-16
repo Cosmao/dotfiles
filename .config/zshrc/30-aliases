@@ -9,8 +9,7 @@ alias shutdown='systemctl poweroff'
 alias v='$EDITOR'
 alias vi="$EDITOR"
 alias vim='$EDITOR'
-alias nvchad="NVIM_APPNAME=nvim-nvchad nvim"
-alias wifi='nmtui'
+alias wifi='impala'
 alias cat="bat"
 # -----------------------------------------------------
 # SCRIPTS
