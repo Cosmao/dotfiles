@@ -46,6 +46,51 @@ Neovim themes are switchable at runtime with `<leader>ft`. Available themes: tok
 - [ ] Fix missing hardware icon in waybar (U+E473 — needs correct nerd font package)
 - [ ] Printer setup (cups + avahi)
 
+### Neovim project config
+
+Per-project settings live in a `.nvim.lua` file in the project root (loaded via `exrc`).
+
+Projects are declared as a table — `<leader>or` shows a project picker, then a type-appropriate action menu.
+
+```lua
+vim.g.projects = {
+  { type = 'cargo', root = '.', target = 'thumbv7em-none-eabihf', chip = 'STM32F411CEUx' },
+  { type = 'idf', root = 'esp-component' },
+}
+```
+
+**Project entry fields:**
+
+| Field | Type | Description |
+|---|---|---|
+| `type` | `'cargo'` \| `'idf'` | Project type |
+| `name` | string | Display name in pickers. Defaults to `root` basename, then type name. |
+| `root` | string | Relative path to project dir (default `.`) |
+| `target` | string | Cargo: target triple e.g. `thumbv7em-none-eabihf`. Omit for native. |
+| `chip` | string | Cargo: probe-rs chip e.g. `STM32F411CEUx`. Enables probe-rs actions and DAP. |
+| `binary` | string | Cargo: override ELF path. Defaults to `<root>/target/<target>/debug/<dirname>`. |
+
+**ESP-IDF** (`type = 'idf'`): `root` is a relative path to the ESP-IDF project directory (defaults to `.`). The path is resolved against cwd — it must contain a `CMakeLists.txt`. Requires `export.sh` sourced separately before running tasks.
+
+**Examples:**
+
+STM32 black pill:
+```lua
+vim.g.projects = {
+  { type = 'cargo', root = '.', target = 'thumbv7em-none-eabihf', chip = 'STM32F411CEUx' },
+}
+```
+
+Monorepo with Rust firmware and ESP-IDF component:
+```lua
+vim.g.projects = {
+  { type = 'cargo', root = 'firmware', target = 'thumbv7em-none-eabihf', chip = 'STM32F411CEUx' },
+  { type = 'idf', root = 'esp-component' },
+}
+```
+
+DAP (`<leader>dc`): start `probe-rs dap-server` first via `<leader>or` → Project → probe-rs: DAP server.
+
 ### Notes
 
 **Restow after clone:**
