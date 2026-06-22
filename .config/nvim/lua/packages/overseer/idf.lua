@@ -13,6 +13,7 @@ local idf_actions = {
   { name = 'Build', cmd = { 'idf.py', 'build' } },
   { name = 'Flash', cmd = { 'idf.py', 'flash' } },
   { name = 'Flash & Monitor', cmd = { 'idf.py', 'flash', 'monitor' } },
+  { name = 'OpenOCD (debug server)', cmd = { 'idf.py', 'openocd' } },
   {
     name = 'Test Flash & Monitor',
     cmd = { 'sh', '-c', 'cp sdkconfig test/sdkconfig && idf.py -C test flash monitor' },
