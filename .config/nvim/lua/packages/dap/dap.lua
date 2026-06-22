@@ -17,6 +17,7 @@ vim.fn.sign_define('DapStopped', { text = '▶', texthl = 'DapStopped', numhl = 
 
 require 'packages.dap.rust'
 require 'packages.dap.probe_rs'
+require 'packages.dap.idf'
 
 dapui.setup()
 
