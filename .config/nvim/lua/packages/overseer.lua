@@ -4,6 +4,13 @@ vim.pack.add { 'https://github.com/stevearc/overseer.nvim' }
 local overseer = require 'overseer'
 overseer.setup {
   form = { border = 'rounded' },
+  component_aliases = {
+    default = {
+      'on_exit_set_status',
+      'notify_running',
+      { 'on_complete_dispose', require_view = { 'SUCCESS', 'FAILURE' } },
+    },
+  },
 }
 
 local dispatchers = {}
