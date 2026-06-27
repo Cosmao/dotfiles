@@ -150,24 +150,20 @@ return {
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-      -- vim.lsp.config must be used to override cmd; the mason-lspconfig
-      -- handler approach no longer reliably applies cmd in nvim-lspconfig v1+.
-      vim.lsp.config('clangd', {
-        cmd = {
-          'clangd',
-          -- Allow clangd to interrogate the xtensa-gcc toolchain for system
-          -- includes and defines. Covers ESP-IDF 4.x and 5.x toolchain paths.
-          '--query-driver='
-            .. vim.fn.expand '~'
-            .. '/work/espressif/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
-        },
-      })
-
       local servers = {
-        clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            -- Allow clangd to interrogate the xtensa-gcc toolchain for system
+            -- includes and defines. Covers ESP-IDF 4.x and 5.x toolchain paths.
+            '--query-driver='
+              .. vim.fn.expand '~'
+              .. '/.espressif/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
+          },
+        },
         -- gopls = {},
-        pylsp = {},
-        -- rust_analyzer = {},
+        pyright = {},
+        rust_analyzer = {},
         -- ts_ls = {},
 
         lua_ls = {
