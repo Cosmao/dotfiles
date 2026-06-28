@@ -71,5 +71,8 @@ vim.opt.scrolloff = 10
 -- Prompt to save unsaved changes when quitting
 vim.o.confirm = true
 
+-- Load per-project .nvim.lua files
+vim.o.exrc = true
+
 -- Border on all floating windows (hover, signature help, completion docs, etc.)
 vim.o.winborder = 'rounded'
