@@ -1,4 +1,6 @@
 local overseer = require 'overseer'
+-- Shared resolvers (target/chip/binary derived from the crate's config files).
+local common = require 'packages.dap.common'
 
 local function project_name(project)
   if project.name then return project.name end
@@ -8,40 +10,23 @@ local function project_name(project)
   return 'Rust'
 end
 
-local function cargo_cwd(project)
-  if not project.root or project.root == '.' then
-    return vim.fn.getcwd()
-  end
-  return vim.fn.getcwd() .. '/' .. project.root
-end
-
 local function cargo_cmd(project, args)
   local cmd = { 'cargo' }
   vim.list_extend(cmd, args)
-  if project.target then
-    vim.list_extend(cmd, { '--target', project.target })
+  local target = common.target(project)
+  if target then
+    vim.list_extend(cmd, { '--target', target })
   end
   return cmd
-end
-
-local function binary_path(project)
-  if project.binary then
-    return project.binary
-  end
-  local cwd = cargo_cwd(project)
-  local name = vim.fn.fnamemodify(cwd, ':t')
-  if project.target then
-    return cwd .. '/target/' .. project.target .. '/debug/' .. name
-  end
-  return cwd .. '/target/debug/' .. name
 end
 
 local M = { type = 'cargo' }
 
 function M.label(project)
   local label = 'Rust — ' .. project_name(project)
-  if project.chip then
-    label = label .. '  [' .. project.chip .. ']'
+  local chip = common.chip(project)
+  if chip then
+    label = label .. '  [' .. chip .. ']'
   end
   return label
 end
@@ -52,15 +37,29 @@ function M.dispatch(project)
     { name = 'Build', cmd = cargo_cmd(project, { 'build' }) },
     { name = 'Build Release', cmd = cargo_cmd(project, { 'build', '--release' }) },
   }
-  if project.chip then
+  local chip = common.chip(project)
+  if chip then
+    local binary = common.binary_path(project)
     vim.list_extend(actions, {
-      { name = 'probe-rs: Download (flash only)', cmd = { 'probe-rs', 'download', '--chip', project.chip, binary_path(project) } },
-      { name = 'probe-rs: Run (flash + RTT)', cmd = { 'probe-rs', 'run', '--chip', project.chip, binary_path(project) } },
-      { name = 'probe-rs: DAP server', cmd = { 'probe-rs', 'dap-server', '--port', '50000' } },
+      { name = 'probe-rs: Download (flash only)', cmd = { 'probe-rs', 'download', '--chip', chip, binary } },
+      {
+        name = 'probe-rs: Run (flash + RTT)',
+        cmd = { 'probe-rs', 'run', '--chip', chip, binary },
+        -- This task runs until you stop it. Stopping sends SIGINT/SIGTERM (and
+        -- SIGKILL if it's mid-flash), so treat those exit codes as a clean stop
+        -- instead of a failure. Listing on_exit_set_status before 'default'
+        -- overrides the alias's copy (resolve() keeps the first by name).
+        components = {
+          { 'on_exit_set_status', success_codes = { 130, 143, 137 } },
+          'default',
+        },
+      },
+      -- No manual DAP server action: nvim-dap (packages/dap/probe_rs.lua) spawns
+      -- and tears down `probe-rs dap-server` per debug session automatically.
     })
   end
 
-  local cwd = cargo_cwd(project)
+  local cwd = common.cargo_cwd(project)
   if not vim.uv.fs_stat(cwd) then
     vim.notify('Cargo: directory not found: ' .. cwd, vim.log.levels.ERROR)
     return
@@ -79,6 +78,7 @@ function M.dispatch(project)
       name = action.name .. ' [' .. label .. ']',
       cmd = action.cmd,
       cwd = cwd,
+      components = action.components, -- nil falls back to the 'default' alias
     }
     t:start()
     overseer.open { enter = false }
