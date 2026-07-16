@@ -76,11 +76,7 @@ table.insert(dap.configurations.rust, {
   end,
   flashingConfig = {
     flashingEnabled = true,
-    -- false: run straight after reset instead of halting in the vector table
-    -- (__INTERRUPTS, which has no source line -> nvim-dap's noisy "Source
-    -- missing, cannot jump to frame"). Breakpoints are armed before the core
-    -- runs, so execution still stops at them.
-    haltAfterReset = false,
+    haltAfterReset = true,
   },
   coreConfigs = {
     {
