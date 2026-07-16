@@ -1,0 +1,16 @@
+# Matugen config for KDE Plasma (desktop branch).
+# Only themes the terminal + neovim — does NOT touch the KDE/Qt theme,
+# and skips the waybar/dunst/rofi/hyprland templates used on the laptop.
+
+[config]
+base16_backend = "wal"
+
+[templates.kitty]
+input_path = "~/.config/matugen/templates/kitty-colors.conf"
+output_path = "~/.config/kitty/themes/Matugen.conf"
+# Apply live to running kitty windows; harmless no-op if not run from kitty.
+post_hook = "kitty @ set-colors --all --configured ~/.config/kitty/themes/Matugen.conf 2>/dev/null || true"
+
+[templates.neovim]
+input_path = "~/.config/matugen/templates/nvim-matugen-palette.lua"
+output_path = "~/.config/nvim/lua/matugen_palette.lua"
