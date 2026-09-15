@@ -7,6 +7,7 @@
 
 # Matugen generated outputs
 .config/hypr/colors.conf
+.config/hypr/colors.lua
 .config/kitty/themes/Matugen.conf
 .config/waybar/colors.css
 .config/dunst/dunstrc
