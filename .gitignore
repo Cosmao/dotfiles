@@ -1,15 +1,12 @@
+# Secrets — never commit, even if one ends up in the repo dir
 .config/zshrc/10-secrets
-.claude/
-.git/
+.claude/.credentials.json
 
-# Neovim generated files
-.config/nvim/lazy-lock.json
+# Claude Code: track only the actual config; everything else that may
+# appear here (caches, session state, project-local settings) stays out
+.claude/*
+!.claude/settings.json
+!.claude/CLAUDE.md
 
-# Matugen generated outputs
-.config/hypr/colors.conf
-.config/hypr/colors.lua
-.config/kitty/themes/Matugen.conf
-.config/waybar/colors.css
-.config/dunst/dunstrc
-.config/rofi/colors.rasi
-.config/nvim/lua/matugen_palette.lua
+# Editor/package state that regenerates locally
+.config/nvim/nvim-pack-lock.json
