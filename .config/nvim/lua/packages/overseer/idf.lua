@@ -76,7 +76,7 @@ function M.dispatch(project)
 
   vim.notify('Sourcing ESP-IDF...', vim.log.levels.INFO)
   vim.system(
-    { 'sh', '-c', '. $HOME/work/esp/esp-idf/export.sh && env' },
+    { 'sh', '-c', '. $HOME/work/esp/esp-idf-6/export.sh && env' },
     { text = true },
     function(result)
       vim.schedule(function()
