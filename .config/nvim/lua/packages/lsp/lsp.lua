@@ -81,7 +81,7 @@ capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp'
 vim.lsp.config('clangd', {
   cmd = {
     'clangd',
-    '--query-driver=' .. vim.fn.expand '~' .. '/work/espressif/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
+    '--query-driver=' .. vim.fn.expand '~' .. '/work/espressif-6/tools/xtensa-esp*/*/xtensa-esp*/bin/xtensa-esp*-elf-gcc',
   },
 })
 
