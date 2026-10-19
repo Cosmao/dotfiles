@@ -14,7 +14,6 @@ alias cat="bat"
 # -----------------------------------------------------
 # SCRIPTS
 # -----------------------------------------------------
-alias wallpaper="~/.config/scripts/wallpaper.sh"
 alias clean="~/.config/scripts/pacmanback.sh"
 alias mkrepo="~/.config/scripts/repo.sh"
 alias get_idf=". $HOME/work/esp/esp-idf-6/export.sh"

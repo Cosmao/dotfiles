@@ -1,8 +1,36 @@
 ## Cosmos dotfiles
 
-Dotfiles managed with [stow](https://www.gnu.org/software/stow/).
+Dotfiles managed with [stow](https://www.gnu.org/software/stow/), shared between a laptop (Arch + Hyprland) and a desktop (CachyOS + KDE).
 
-### Programs
+### Layout
+
+| Path | Contents |
+|---|---|
+| `common/` | Shared by every host: nvim, kitty, fish, zsh, ssh, git, scripts… |
+| `hosts/laptop/` | Hyprland, waybar, rofi, wlogout, lf, matugen config |
+| `hosts/desktop/` | KDE bits: baloo, matugen KDE config, default terminal |
+| `system/common/`, `system/<host>/` | Files for `/` (udev rules, ly, system units), copied with sudo |
+
+```sh
+./install.sh desktop   # first run on a machine: link common/ + hosts/desktop/
+./install.sh           # later runs reuse the host saved in .host
+./install.sh -n        # dry run
+./install.sh -s        # also copy system/ files into / (sudo)
+```
+
+Every file lives in exactly one place — stow refuses if `common/` and a host ship the same path. When a shared config needs per-host values, the shared file includes a host file:
+
+| Config | Host file |
+|---|---|
+| kitty | `.config/kitty/host.conf` (theme, font size) |
+| zsh | `.config/zshrc/50-host` |
+| fish | `.config/fish/conf.d/host.fish` |
+
+A config that can't include anything gets a full copy in each `hosts/<host>/`.
+
+On a machine still linked by the old single-package stow (folded directory symlinks), run `./unfold.sh` once first.
+
+### Programs (laptop)
 
 | Program | Role |
 |---|---|

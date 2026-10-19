@@ -1,12 +1,27 @@
+# Which host this checkout is (written by install.sh)
+/.host
+
 # Secrets — never commit, even if one ends up in the repo dir
-.config/zshrc/10-secrets
-.claude/.credentials.json
+common/.config/zshrc/10-secrets
+common/.claude/.credentials.json
 
 # Claude Code: track only the actual config; everything else that may
 # appear here (caches, session state, project-local settings) stays out
-.claude/*
-!.claude/settings.json
-!.claude/CLAUDE.md
+common/.claude/*
+!common/.claude/settings.json
+!common/.claude/CLAUDE.md
 
 # Editor/package state that regenerates locally
-.config/nvim/nvim-pack-lock.json
+common/.config/nvim/nvim-pack-lock.json
+common/.config/nvim/lazy-lock.json
+
+# Matugen generated outputs
+**/.config/kitty/themes/Matugen.conf
+**/.config/nvim/lua/matugen_palette.lua
+**/.config/hypr/colors.lua
+**/.config/waybar/colors.css
+**/.config/dunst/dunstrc
+**/.config/rofi/colors.rasi
+
+# fish rewrites this with per-machine state
+**/.config/fish/fish_variables

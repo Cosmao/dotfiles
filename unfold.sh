@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# One-time migration before the first ./stow.sh run on a machine.
+# One-time migration before the first ./install.sh run on a machine.
 #
 # Converts stow's "folded" directory symlinks (e.g. ~/.claude ->
 # dotfiles/.claude, which makes apps write caches and state into the
 # repo) into real directories: every file git does NOT track is moved
 # out of the repo into the real directory; tracked files stay in the
-# repo and ./stow.sh symlinks them back afterwards.
+# repo and ./install.sh symlinks them back afterwards.
 set -euo pipefail
 cd "$(dirname "$0")"
 repo=$PWD
@@ -31,4 +31,4 @@ for link in "$HOME"/.* "$HOME"/.config/*; do
     unfold "$link"
 done
 
-echo "done — now run ./stow.sh"
+echo "done — now run ./install.sh <host>"
