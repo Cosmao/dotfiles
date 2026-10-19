@@ -1,9 +1,14 @@
-# Which host this checkout is (written by install.sh)
+# Written by install.sh: this checkout's host, and local edits it reverted
 /.host
+/.adopted.patch
 
 # Secrets — never commit, even if one ends up in the repo dir
 common/.config/zshrc/10-secrets
-common/.claude/.credentials.json
+**/.claude/.credentials.json
+
+# Leftovers from the old single-package layout (~/.claude folded into
+# the repo root) — may hold credentials and session history
+/.claude/
 
 # Claude Code: track only the actual config; everything else that may
 # appear here (caches, session state, project-local settings) stays out
