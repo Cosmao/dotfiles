@@ -6,7 +6,7 @@
 # pair of matching quotes around the value stripped; nothing is expanded.
 set -l secrets ~/.config/zshrc/10-secrets
 if test -f $secrets
-    for line in (cat $secrets)
+    for line in (command cat $secrets)
         set -l kv (string match -rg '^\s*export\s+([A-Za-z_]\w*)=(.*)$' -- $line)
         or continue
         set -gx $kv[1] (string replace -r '^([\'"])(.*)\1$' '$2' -- "$kv[2]")
