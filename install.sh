@@ -106,7 +106,9 @@ stow_pkg() {
     fi
     # Dry run: nothing was pruned, so stow sees the prune: links above as
     # conflicts (or plans to unlink them). Show those as the links they
-    # become after the prune; any other conflict is real.
+    # become after the prune; any other conflict is real. --restow also
+    # plans an unlink + link for every link that is already correct; drop
+    # those so only changes are shown.
     local out line path plan=() conflicts=()
     out=$(stow "${stow_opts[@]}" --adopt --dir="$1" --restow "$2" 2>&1) || true
     while IFS= read -r line; do
@@ -120,8 +122,12 @@ stow_pkg() {
                     conflicts+=("$line")
                 fi
                 ;;
-            'UNLINK: '*)
-                [[ -n ${pruned[${line#UNLINK: }]:-} ]] || plan+=("$line")
+            'UNLINK: '* | 'LINK: '*)
+                path=${line#*: }
+                path=${path%% => *}
+                [[ $line == UNLINK* && -n ${pruned[$path]:-} ]] && continue
+                [[ -L $HOME/$path && $(readlink -m "$HOME/$path") == "${want[$path]:-}" ]] && continue
+                plan+=("$line")
                 ;;
             'WARNING! stowing'* | 'All operations aborted.' | 'WARNING: in simulation mode'*) ;;
             ?*) plan+=("$line") ;;
