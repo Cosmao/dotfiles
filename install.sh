@@ -68,23 +68,24 @@ done
 # Links to check for pruning: the last run's manifest. Without one (first
 # run, or a machine still on the old single-package layout that also
 # stowed etc/ into $HOME), every symlink one level deep in each directory
-# any package has.
+# that ever held a file in this repo's history, package prefix stripped.
 prune_candidates() {
     if [[ -f $manifest ]]; then
         cat "$manifest"
         return
     fi
-    local p d dir link
-    for p in common hosts/* system/*; do
-        [[ -d $p ]] && (cd "$p" && find . -type d)
-    done | sed 's|^\.$||; s|^\./||' | sort -u | while IFS= read -r d; do
-        dir=$HOME${d:+/$d}
-        [[ -d $dir && ! -L $dir ]] || continue
-        find "$dir" -mindepth 1 -maxdepth 1 -type l -print0 2>/dev/null |
-            while IFS= read -r -d '' link; do
-                echo "${link#"$HOME"/}"
-            done
-    done
+    local d dir link
+    git log --format= --name-only --no-renames HEAD |
+        sed -E 's#^(common|hosts/[^/]+|system/[^/]+)/##; /\//!s#.*##; s#/[^/]*$##' |
+        sort -u |
+        while IFS= read -r d; do
+            dir=$HOME${d:+/$d}
+            [[ -d $dir && ! -L $dir ]] || continue
+            find "$dir" -mindepth 1 -maxdepth 1 -type l -print0 2>/dev/null |
+                while IFS= read -r -d '' link; do
+                    echo "${link#"$HOME"/}"
+                done
+        done
 }
 
 declare -A pruned
@@ -157,7 +158,7 @@ if ((!dry)); then
         git --no-pager diff --stat -- common "hosts/$host" >&2
         answer=r
         while [[ -t 0 ]]; do
-            read -rp "[r]evert to repo version, [k]eep local edits, show [d]iff? [r] " answer
+            read -rp "[r]evert to repo version, [k]eep local edits, show [d]iff? [r] " answer || answer=r
             answer=${answer:-r}
             case $answer in
                 d*) git diff -- common "hosts/$host" ;;
