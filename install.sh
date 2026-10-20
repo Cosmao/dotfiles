@@ -22,7 +22,8 @@
 #
 # .links lists every $HOME path linked on the last run. Links into this
 # repo that the current host no longer wants (file moved or deleted in the
-# repo, or belonging to another host) are pruned before stowing.
+# repo, or belonging to another host) are pruned before stowing. Both
+# stows are planned with stow -n first; on any conflict nothing changes.
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 repo=$PWD
@@ -33,6 +34,8 @@ usage() {
     exit 1
 }
 
+((EUID)) || { echo "error: run as your user; -s calls sudo itself." >&2; exit 1; }
+
 dry=0 system=0
 while getopts ns opt; do
     case $opt in
@@ -42,18 +45,27 @@ while getopts ns opt; do
     esac
 done
 shift $((OPTIND - 1))
+(($# <= 1)) || usage # options go before the host: "laptop -n" is not a dry run
 
 host=${1:-$(cat .host 2>/dev/null || true)}
 [[ -n $host ]] || usage
-[[ -d hosts/$host ]] || { echo "error: no hosts/$host" >&2; usage; }
+[[ $host =~ ^[A-Za-z0-9_-]+$ && -d hosts/$host ]] || { echo "error: no hosts/$host" >&2; usage; }
 
 stow_opts=(--no-folding --target="$HOME")
-((dry)) && stow_opts+=(-n -v)
 
-if ((!dry)) && [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
-    echo "error: uncommitted changes to tracked files — commit or stash first." >&2
-    echo "       (--adopt + git restore would discard them)" >&2
-    exit 1
+if ((!dry)); then
+    if [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+        echo "error: uncommitted changes to tracked files — commit or stash first." >&2
+        echo "       (--adopt + git restore would discard them)" >&2
+        exit 1
+    fi
+    # --adopt would also overwrite a new file that isn't committed yet
+    untracked=$(git ls-files --others --exclude-standard -- common "hosts/$host")
+    if [[ -n $untracked ]]; then
+        echo "error: untracked files in the packages — commit or remove them first:" >&2
+        sed 's/^/  /' <<<"$untracked" >&2
+        exit 1
+    fi
 fi
 
 # Every path this host links, mapped to the repo file it should point at.
@@ -64,6 +76,15 @@ for pkg in common "hosts/$host"; do
         want[$f]=$repo/$pkg/$f
     done < <(cd "$pkg" && find . \( -type f -o -type l \) -print0)
 done
+
+# Where a link points, one hop only: your own link to a linked file is not
+# a link into the repo.
+link_dest() {
+    local t
+    t=$(readlink "$1")
+    [[ $t == /* ]] || t=$(realpath -m "$(dirname "$1")")/$t
+    realpath -ms "$t"
+}
 
 # Links to check for pruning: the last run's manifest. Without one (first
 # run, or a machine still on the old single-package layout that also
@@ -90,28 +111,22 @@ prune_candidates() {
 
 declare -A pruned
 while IFS= read -r rel; do
-    link=$HOME/$rel
-    [[ -L $link ]] || continue
-    dest=$(readlink -m "$link")
-    [[ $dest == "$repo"/* && $dest != "${want[$rel]:-}" ]] || continue
-    echo "prune: $rel"
-    pruned[$rel]=1
-    ((dry)) || rm "$link"
+    [[ -n $rel && -L $HOME/$rel ]] || continue
+    dest=$(link_dest "$HOME/$rel")
+    if [[ $dest == "$repo"/* && $dest != "${want[$rel]:-}" ]]; then
+        pruned[$rel]=1
+    fi
 done < <(prune_candidates)
 
-# stow_pkg <stow dir> <package>
-stow_pkg() {
-    if ((!dry)); then
-        stow "${stow_opts[@]}" --adopt --dir="$1" --restow "$2"
-        return
-    fi
-    # Dry run: nothing was pruned, so stow sees the prune: links above as
-    # conflicts (or plans to unlink them). Show those as the links they
-    # become after the prune; any other conflict is real. --restow also
-    # plans an unlink + link for every link that is already correct; drop
-    # those so only changes are shown.
-    local out line path plan=() conflicts=()
-    out=$(stow "${stow_opts[@]}" --adopt --dir="$1" --restow "$2" 2>&1) || true
+# plan_pkg <stow dir> <package>: stow -n, adding to plan and problems.
+# Nothing is pruned yet, so stow sees the links the prune removes as
+# conflicts (or plans to unlink them); show those as the links they become.
+# --restow also plans an unlink + link for every link that is already
+# correct; drop those so only changes are shown.
+plan=() problems=()
+plan_pkg() {
+    local out line path rc=0 before=${#problems[@]} excused=0
+    out=$(stow "${stow_opts[@]}" -n -v --adopt --dir="$1" --restow "$2" 2>&1) || rc=$?
     while IFS= read -r line; do
         case $line in
             '  * '*)
@@ -119,40 +134,64 @@ stow_pkg() {
                 path=${path%% => *}
                 if [[ -n ${pruned[$path]:-} ]]; then
                     plan+=("LINK: $path (after prune)")
+                    excused=1
                 else
-                    conflicts+=("$line")
+                    problems+=("$2: ${line#  \* }")
                 fi
                 ;;
             'UNLINK: '* | 'LINK: '*)
                 path=${line#*: }
                 path=${path%% => *}
-                [[ $line == UNLINK* && -n ${pruned[$path]:-} ]] && continue
-                [[ -L $HOME/$path && $(readlink -m "$HOME/$path") == "${want[$path]:-}" ]] && continue
+                if [[ $line == UNLINK* && -n ${pruned[$path]:-} ]]; then
+                    continue
+                fi
+                if [[ -L $HOME/$path && $(link_dest "$HOME/$path") == "${want[$path]:-}" ]]; then
+                    continue
+                fi
                 plan+=("$line")
                 ;;
-            'WARNING! stowing'* | 'All operations aborted.' | 'WARNING: in simulation mode'*) ;;
-            ?*) plan+=("$line") ;;
+            'WARNING! stowing'* | 'All operations aborted.' | 'WARNING: in simulation mode'* | '') ;;
+            *ERROR*) problems+=("$2: $line") ;;
+            *) plan+=("$line") ;;
         esac
     done <<<"$out"
-    ((${#plan[@]})) && printf '%s\n' "${plan[@]}"
-    if ((${#conflicts[@]})); then
-        echo "conflicts stowing $2 (a real run would abort):"
-        printf '%s\n' "${conflicts[@]}"
+    if ((rc && !excused && ${#problems[@]} == before)); then
+        problems+=("$2: stow -n exited $rc")
     fi
 }
 
-stow_pkg "$repo" common
-stow_pkg "$repo/hosts" "$host"
+plan_pkg "$repo" common
+plan_pkg "$repo/hosts" "$host"
 
-if ((!dry)); then
+if ((${#problems[@]})); then
+    echo "error: stowing would fail; nothing was changed:" >&2
+    printf '  %s\n' "${problems[@]}" >&2
+    exit 1
+fi
+
+if ((dry)); then
+    for rel in "${!pruned[@]}"; do echo "prune: $rel"; done | sort
+    if ((${#plan[@]})); then
+        printf '%s\n' "${plan[@]}"
+    fi
+else
+    for rel in "${!pruned[@]}"; do
+        echo "prune: $rel"
+        rm "$HOME/$rel"
+    done
+    failed=0
+    stow "${stow_opts[@]}" --adopt --dir="$repo" --restow common || failed=1
+    ((failed)) || stow "${stow_opts[@]}" --adopt --dir="$repo/hosts" --restow "$host" || failed=1
+
     for rel in "${!want[@]}"; do
-        if [[ -L $HOME/$rel && $(readlink -m "$HOME/$rel") == "${want[$rel]}" ]]; then
+        if [[ -L $HOME/$rel && $(link_dest "$HOME/$rel") == "${want[$rel]}" ]]; then
             echo "$rel"
         fi
     done | sort >"$manifest"
 
     # Files adopted from $HOME that differed from the repo: usually an app
     # replaced its symlink with a real file (e.g. KDE saving a setting).
+    # Checked even if a stow failed, so adopted content is never stranded.
     if ! git diff --quiet -- common "hosts/$host"; then
         echo "adopted from \$HOME, differs from the repo:" >&2
         git --no-pager diff --stat -- common "hosts/$host" >&2
@@ -169,10 +208,14 @@ if ((!dry)); then
             echo "kept: commit (or git restore) them before the next run." >&2
         else
             patch=.adopted-$(date +%Y%m%d-%H%M%S).patch
-            git diff -- common "hosts/$host" >"$patch"
+            git diff --binary -- common "hosts/$host" >"$patch"
             git restore -- common "hosts/$host"
             echo "reverted (local edits saved to $patch)" >&2
         fi
+    fi
+    if ((failed)); then
+        echo "error: stow failed; see above." >&2
+        exit 1
     fi
     echo "$host" >.host
     echo "stowed common + $host into $HOME"
