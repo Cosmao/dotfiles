@@ -28,6 +28,12 @@ Every file lives in exactly one place — stow refuses if `common/` and a host s
 
 A config that can't include anything gets a full copy in each `hosts/<host>/`.
 
+`install.sh` records the links it made in `.links` (gitignored). The next run removes any of them the host no longer ships, whether the file was moved or deleted in the repo or belongs to another host.
+
+If an app replaced one of the symlinks with a real file, `install.sh` asks whether to revert it to the repo version (the local edits are saved to `.adopted-<time>.patch`) or keep the edits as uncommitted changes.
+
+Secrets go in `~/.config/zshrc/10-secrets` as a plain file in `$HOME`, not in the repo. `.zshrc` sources everything in that directory.
+
 On a machine still linked by the old single-package stow (folded directory symlinks), run `./unfold.sh` once first.
 
 ### Programs (laptop)
@@ -121,9 +127,14 @@ DAP (`<leader>dc`): start `probe-rs dap-server` first via `<leader>or` → Proje
 
 ### Notes
 
-**Restow after clone:**
+**Restow after clone or pull:**
 ```
-stow -v -R .
+./install.sh <host>   # or restow.sh, which runs it from ~/dotfiles
+```
+
+**Restart rclone after suspend** (needs `./install.sh -s` first):
+```
+sudo systemctl enable rclone-resume@$USER.service
 ```
 
 **Rebuild Python packages after update:**

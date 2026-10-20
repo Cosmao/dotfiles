@@ -1,0 +1,12 @@
+# Instance name is the user whose rclone-onedrive.service to restart:
+#   sudo systemctl enable rclone-resume@$USER.service
+[Unit]
+Description=Restart %i's rclone mount after resume
+After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl --user -M %i@.host restart rclone-onedrive.service
+
+[Install]
+WantedBy=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target

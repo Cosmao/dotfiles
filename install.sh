@@ -5,7 +5,6 @@
 #   host  a directory under hosts/ (laptop, desktop). Remembered in .host,
 #         so later runs can leave it out.
 #   -n    dry run: show what would be pruned, linked and (with -s) copied.
-#         Stow may report conflicts here for stale links a real run prunes.
 #   -s    also copy system/common/ and system/<host>/ into / (sudo)
 #
 # Every target path must come from exactly one package. If common/ and a
@@ -16,12 +15,18 @@
 # --no-folding : real directories in $HOME, symlinks for files only, so
 #                runtime/generated files never land inside this repo.
 # --adopt      : a real file already at a target path (an app wrote its
-#                own default) is moved into the repo and symlinked; the
-#                git restore afterwards puts the repo's version back, so
-#                the repo always wins.
+#                own default) is moved into the repo and symlinked. If that
+#                changed a tracked file you choose: revert to the repo
+#                version (local edits saved to .adopted-<time>.patch) or
+#                keep the edits as uncommitted changes to commit.
+#
+# .links lists every $HOME path linked on the last run. Links into this
+# repo that the current host no longer wants (file moved or deleted in the
+# repo, or belonging to another host) are pruned before stowing.
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 repo=$PWD
+manifest=$repo/.links
 
 usage() {
     echo "usage: $0 [-n] [-s] [host]   hosts: $(ls hosts | tr '\n' ' ')" >&2
@@ -51,51 +56,119 @@ if ((!dry)) && [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
     exit 1
 fi
 
-# Drop symlinks into this repo whose target no longer exists (files that
-# were moved or deleted in the repo), so they don't linger in $HOME.
-# Only directories some package (any host, and system/ for the old layout
-# that stowed etc/ into $HOME) has are checked, one level deep each.
-pkg_dirs() {
-    local p
-    for p in common hosts/* system/*; do
-        [[ -d $p ]] && (cd "$p" && find . -type d)
-    done | sed 's|^\.$||; s|^\./||' | sort -u
-}
-while IFS= read -r d; do
-    dir=$HOME${d:+/$d}
-    [[ -d $dir && ! -L $dir ]] || continue
-    find "$dir" -maxdepth 1 -xtype l -print0 2>/dev/null | while IFS= read -r -d '' link; do
-        case $(readlink -m "$link") in
-            "$repo"/*)
-                echo "prune: ${link#"$HOME"/}"
-                ((dry)) || rm "$link"
-                ;;
-        esac
-    done || true
-done < <(pkg_dirs)
-
-# Switching hosts: remove the other hosts' links first.
-for other in hosts/*/; do
-    other=$(basename "$other")
-    [[ $other == "$host" ]] && continue
-    stow "${stow_opts[@]}" -D --dir="$repo/hosts" "$other" 2>/dev/null || true
+# Every path this host links, mapped to the repo file it should point at.
+declare -A want
+for pkg in common "hosts/$host"; do
+    while IFS= read -r -d '' f; do
+        f=${f#./}
+        want[$f]=$repo/$pkg/$f
+    done < <(cd "$pkg" && find . \( -type f -o -type l \) -print0)
 done
 
-stow "${stow_opts[@]}" --adopt --dir="$repo" --restow common || ((dry))
-stow "${stow_opts[@]}" --adopt --dir="$repo/hosts" --restow "$host" || ((dry))
+# Links to check for pruning: the last run's manifest. Without one (first
+# run, or a machine still on the old single-package layout that also
+# stowed etc/ into $HOME), every symlink one level deep in each directory
+# any package has.
+prune_candidates() {
+    if [[ -f $manifest ]]; then
+        cat "$manifest"
+        return
+    fi
+    local p d dir link
+    for p in common hosts/* system/*; do
+        [[ -d $p ]] && (cd "$p" && find . -type d)
+    done | sed 's|^\.$||; s|^\./||' | sort -u | while IFS= read -r d; do
+        dir=$HOME${d:+/$d}
+        [[ -d $dir && ! -L $dir ]] || continue
+        find "$dir" -mindepth 1 -maxdepth 1 -type l -print0 2>/dev/null |
+            while IFS= read -r -d '' link; do
+                echo "${link#"$HOME"/}"
+            done
+    done
+}
+
+declare -A pruned
+while IFS= read -r rel; do
+    link=$HOME/$rel
+    [[ -L $link ]] || continue
+    dest=$(readlink -m "$link")
+    [[ $dest == "$repo"/* && $dest != "${want[$rel]:-}" ]] || continue
+    echo "prune: $rel"
+    pruned[$rel]=1
+    ((dry)) || rm "$link"
+done < <(prune_candidates)
+
+# stow_pkg <stow dir> <package>
+stow_pkg() {
+    if ((!dry)); then
+        stow "${stow_opts[@]}" --adopt --dir="$1" --restow "$2"
+        return
+    fi
+    # Dry run: nothing was pruned, so stow sees the prune: links above as
+    # conflicts (or plans to unlink them). Show those as the links they
+    # become after the prune; any other conflict is real.
+    local out line path plan=() conflicts=()
+    out=$(stow "${stow_opts[@]}" --adopt --dir="$1" --restow "$2" 2>&1) || true
+    while IFS= read -r line; do
+        case $line in
+            '  * '*)
+                path=${line##*: }
+                path=${path%% => *}
+                if [[ -n ${pruned[$path]:-} ]]; then
+                    plan+=("LINK: $path (after prune)")
+                else
+                    conflicts+=("$line")
+                fi
+                ;;
+            'UNLINK: '*)
+                [[ -n ${pruned[${line#UNLINK: }]:-} ]] || plan+=("$line")
+                ;;
+            'WARNING! stowing'* | 'All operations aborted.' | 'WARNING: in simulation mode'*) ;;
+            ?*) plan+=("$line") ;;
+        esac
+    done <<<"$out"
+    ((${#plan[@]})) && printf '%s\n' "${plan[@]}"
+    if ((${#conflicts[@]})); then
+        echo "conflicts stowing $2 (a real run would abort):"
+        printf '%s\n' "${conflicts[@]}"
+    fi
+}
+
+stow_pkg "$repo" common
+stow_pkg "$repo/hosts" "$host"
 
 if ((!dry)); then
+    for rel in "${!want[@]}"; do
+        if [[ -L $HOME/$rel && $(readlink -m "$HOME/$rel") == "${want[$rel]}" ]]; then
+            echo "$rel"
+        fi
+    done | sort >"$manifest"
+
     # Files adopted from $HOME that differed from the repo: usually an app
     # replaced its symlink with a real file (e.g. KDE saving a setting).
-    # Keep what was there as a patch before the repo version wins.
     if ! git diff --quiet -- common "hosts/$host"; then
-        git diff -- common "hosts/$host" > .adopted.patch
-        echo "warning: reverted these to the repo version (local edits saved to .adopted.patch):" >&2
-        git diff --name-only -- common "hosts/$host" | sed 's/^/  /' >&2
+        echo "adopted from \$HOME, differs from the repo:" >&2
+        git --no-pager diff --stat -- common "hosts/$host" >&2
+        answer=r
+        while [[ -t 0 ]]; do
+            read -rp "[r]evert to repo version, [k]eep local edits, show [d]iff? [r] " answer
+            answer=${answer:-r}
+            case $answer in
+                d*) git diff -- common "hosts/$host" ;;
+                r* | k*) break ;;
+            esac
+        done
+        if [[ $answer == k* ]]; then
+            echo "kept: commit (or git restore) them before the next run." >&2
+        else
+            patch=.adopted-$(date +%Y%m%d-%H%M%S).patch
+            git diff -- common "hosts/$host" >"$patch"
+            git restore -- common "hosts/$host"
+            echo "reverted (local edits saved to $patch)" >&2
+        fi
     fi
-    git restore -- common "hosts/$host"
-    echo "$host" > .host
-    echo "stowed common + $host into $HOME (repo versions win)"
+    echo "$host" >.host
+    echo "stowed common + $host into $HOME"
 fi
 
 if ((system)); then

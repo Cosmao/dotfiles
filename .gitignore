@@ -1,9 +1,11 @@
-# Written by install.sh: this checkout's host, and local edits it reverted
+# Written by install.sh: this checkout's host, the links it made, and
+# local edits it reverted
 /.host
-/.adopted.patch
+/.links
+/.adopted-*.patch
 
-# Secrets — never commit, even if one ends up in the repo dir
-common/.config/zshrc/10-secrets
+# Secrets live in $HOME (~/.config/zshrc/10-secrets), never in the repo
+**/.config/zshrc/10-secrets
 **/.claude/.credentials.json
 
 # Leftovers from the old single-package layout (~/.claude folded into
