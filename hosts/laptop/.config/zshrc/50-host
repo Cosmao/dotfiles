@@ -1,0 +1,5 @@
+# -----------------------------------------------------
+# Laptop-only exports and aliases
+# -----------------------------------------------------
+export WALLPAPERPATH="$HOME/Wallpapers/"
+alias wallpaper="~/.config/scripts/wallpaper.sh"

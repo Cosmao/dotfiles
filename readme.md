@@ -1,8 +1,42 @@
 ## Cosmos dotfiles
 
-Dotfiles managed with [stow](https://www.gnu.org/software/stow/).
+Dotfiles managed with [stow](https://www.gnu.org/software/stow/), shared between a laptop (Arch + Hyprland) and a desktop (CachyOS + KDE).
 
-### Programs
+### Layout
+
+| Path | Contents |
+|---|---|
+| `common/` | Shared by every host: nvim, kitty, fish, zsh, ssh, git, scripts… |
+| `hosts/laptop/` | Hyprland, waybar, rofi, wlogout, lf, matugen config |
+| `hosts/desktop/` | KDE bits: baloo, default terminal |
+| `system/common/`, `system/<host>/` | Files for `/` (udev rules, ly, system units), copied with sudo |
+
+```sh
+./install.sh desktop   # first run on a machine: link common/ + hosts/desktop/
+./install.sh           # later runs reuse the host saved in .host
+./install.sh -n        # dry run
+./install.sh -s        # also copy system/ files into / (sudo)
+```
+
+Every file lives in exactly one place — stow refuses if `common/` and a host ship the same path. When a shared config needs per-host values, the shared file includes a host file:
+
+| Config | Host file |
+|---|---|
+| kitty | `.config/kitty/host.conf` (theme, font size) |
+| zsh | `.config/zshrc/50-host` |
+| fish | `.config/fish/conf.d/host.fish` |
+
+A config that can't include anything gets a full copy in each `hosts/<host>/`.
+
+`install.sh` records the links it made in `.links` (gitignored). The next run removes any of them the host no longer ships, whether the file was moved or deleted in the repo or belongs to another host.
+
+If an app replaced one of the symlinks with a real file, `install.sh` asks whether to revert it to the repo version (the local edits are saved to `.adopted-<time>.patch`) or keep the edits as uncommitted changes.
+
+Secrets go in `~/.config/zshrc/10-secrets` as a plain file in `$HOME`, not in the repo. `.zshrc` sources everything in that directory; fish (`conf.d/secrets.fish`) reads the `export NAME=value` lines from the same file.
+
+On a machine still linked by the old single-package stow (folded directory symlinks), run `./unfold.sh` once first.
+
+### Programs (laptop)
 
 | Program | Role |
 |---|---|
@@ -93,9 +127,14 @@ DAP (`<leader>dc`): start `probe-rs dap-server` first via `<leader>or` → Proje
 
 ### Notes
 
-**Restow after clone:**
+**Restow after clone or pull:**
 ```
-stow -v -R .
+./install.sh <host>   # or restow.sh, which runs it from ~/dotfiles
+```
+
+**Restart rclone after suspend** (needs `./install.sh -s` first):
+```
+sudo systemctl enable rclone-resume@$USER.service
 ```
 
 **Rebuild Python packages after update:**

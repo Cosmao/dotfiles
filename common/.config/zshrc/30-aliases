@@ -1,0 +1,22 @@
+# -----------------------------------------------------
+# ALIASES
+# -----------------------------------------------------
+alias c='clear'
+alias ls='eza -a'
+alias ll='eza -al'
+alias lt='eza -a --tree --level=2'
+alias shutdown='systemctl poweroff'
+alias v='$EDITOR'
+alias vi="$EDITOR"
+alias vim='$EDITOR'
+alias wifi='impala'
+alias cat="bat"
+# -----------------------------------------------------
+# SCRIPTS
+# -----------------------------------------------------
+alias clean="~/.config/scripts/pacmanback.sh"
+alias mkrepo="~/.config/scripts/repo.sh"
+alias get_idf=". $HOME/work/esp/esp-idf-6/export.sh"
+alias restow="~/.config/scripts/restow.sh"
+alias pacinfo="~/.config/scripts/pacinfo.sh"
+alias ssh-all="~/.config/scripts/ssh-all.sh"

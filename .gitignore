@@ -1,12 +1,34 @@
-# Secrets — never commit, even if one ends up in the repo dir
-.config/zshrc/10-secrets
-.claude/.credentials.json
+# Written by install.sh: this checkout's host, the links it made, and
+# local edits it reverted
+/.host
+/.links
+/.adopted-*.patch
+
+# Secrets live in $HOME (~/.config/zshrc/10-secrets), never in the repo
+**/.config/zshrc/10-secrets
+**/.claude/.credentials.json
+
+# Leftovers from the old single-package layout (~/.claude folded into
+# the repo root) — may hold credentials and session history
+/.claude/
 
 # Claude Code: track only the actual config; everything else that may
 # appear here (caches, session state, project-local settings) stays out
-.claude/*
-!.claude/settings.json
-!.claude/CLAUDE.md
+common/.claude/*
+!common/.claude/settings.json
+!common/.claude/CLAUDE.md
 
 # Editor/package state that regenerates locally
-.config/nvim/nvim-pack-lock.json
+common/.config/nvim/nvim-pack-lock.json
+common/.config/nvim/lazy-lock.json
+
+# Matugen generated outputs
+**/.config/kitty/themes/Matugen.conf
+**/.config/nvim/lua/matugen_palette.lua
+**/.config/hypr/colors.lua
+**/.config/waybar/colors.css
+**/.config/dunst/dunstrc
+**/.config/rofi/colors.rasi
+
+# fish rewrites this with per-machine state
+**/.config/fish/fish_variables
