@@ -5,7 +5,7 @@
 # -----------------------------------------------------
 # SSH-agent
 # -----------------------------------------------------
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+if ! pgrep -xu "$USER" ssh-agent > /dev/null; then
     ssh-agent -t 9h > "$XDG_RUNTIME_DIR/ssh-agent.env"
 fi
 if [[ ! -S "$SSH_AUTH_SOCK" ]]; then

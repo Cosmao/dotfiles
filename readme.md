@@ -8,7 +8,7 @@ Dotfiles managed with [stow](https://www.gnu.org/software/stow/), shared between
 |---|---|
 | `common/` | Shared by every host: nvim, kitty, fish, zsh, ssh, git, scripts… |
 | `hosts/laptop/` | Hyprland, waybar, rofi, wlogout, lf, matugen config |
-| `hosts/desktop/` | KDE bits: baloo, matugen KDE config, default terminal |
+| `hosts/desktop/` | KDE bits: baloo, default terminal |
 | `system/common/`, `system/<host>/` | Files for `/` (udev rules, ly, system units), copied with sudo |
 
 ```sh
@@ -32,7 +32,7 @@ A config that can't include anything gets a full copy in each `hosts/<host>/`.
 
 If an app replaced one of the symlinks with a real file, `install.sh` asks whether to revert it to the repo version (the local edits are saved to `.adopted-<time>.patch`) or keep the edits as uncommitted changes.
 
-Secrets go in `~/.config/zshrc/10-secrets` as a plain file in `$HOME`, not in the repo. `.zshrc` sources everything in that directory.
+Secrets go in `~/.config/zshrc/10-secrets` as a plain file in `$HOME`, not in the repo. `.zshrc` sources everything in that directory; fish (`conf.d/secrets.fish`) reads the `export NAME=value` lines from the same file.
 
 On a machine still linked by the old single-package stow (folded directory symlinks), run `./unfold.sh` once first.
 
